@@ -6,10 +6,12 @@ import {
   Menu,
   MenuItem,
   clipboard,
+  globalShortcut,
 } from 'electron';
 import { format as formatUrl } from 'url';
 import path from 'path';
 import robotjs from 'robotjs';
+import startCase from 'lodash/startCase';
 import {
   createProtocol,
   installVueDevtools,
@@ -37,7 +39,7 @@ function createMainWindow() {
           protocol: 'file',
           slashes: true,
         }),
-    height: 190,
+    height: 640,
     width: 420,
     hasShadow: false,
     resizable: false,
@@ -45,7 +47,7 @@ function createMainWindow() {
     maximizable: false,
     showDockIcon: isDevelopment,
     transparent: true,
-    alwaysOnTop: true,
+    alwaysOnTop: false,
     preloadWindow: true,
     webPreferences: {
       scrollBounce: true,
@@ -84,27 +86,9 @@ function createMainWindow() {
     mb.hideWindow();
   });
 
-  ipcMain.on('translateSelection', async () => {
-    const oldString = clipboard.readText();
-    robotjs.keyTap('c', 'command'); // Invalid when no selection text
-    await new Promise(resolve => setTimeout(resolve, 100));
-    const newString = clipboard.readText();
-    clipboard.writeText(oldString);
-    mb.showWindow();
-    webContents.send('translate-clipboard-text', newString.trim());
-  });
-
   if (isDevelopment && !process.env.IS_TEST) {
     webContents.openDevTools({ mode: 'undocked' });
   }
-
-  webContents.session.webRequest.onBeforeSendHeaders((detail, cb) => {
-    const { url, requestHeaders } = detail;
-    if (url.includes('fanyi.youdao.com')) {
-      requestHeaders.Referer = 'http://fanyi.youdao.com';
-    } else delete requestHeaders.Referer;
-    cb({ requestHeaders });
-  });
 
   window.on('closed', () => {
     mainWindow = null;
@@ -160,5 +144,23 @@ app.on('ready', async () => {
     }
   } finally {
     mainWindow = createMainWindow();
+    globalShortcut.register('CommandOrControl+Q', async () => {
+      const { window } = mainWindow;
+      if (window.isVisible()) {
+        mainWindow.hideWindow();
+      } else {
+        const oldString = clipboard.readText();
+        robotjs.keyTap('c', 'command'); // Invalid when no selection text
+        await new Promise(resolve => setTimeout(resolve, 300));
+        const newString = clipboard.readText();
+        const trimStr = newString.trim();
+        const originStr = /^[a-zA-Z_-]+$/.test(trimStr)
+          ? startCase(trimStr)
+          : trimStr;
+        clipboard.writeText(oldString);
+        mainWindow.showWindow();
+        window.webContents.send('translate-clipboard-text', originStr);
+      }
+    });
   }
 });

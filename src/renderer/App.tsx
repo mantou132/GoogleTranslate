@@ -1,9 +1,9 @@
-import { remote, ipcRenderer } from 'electron';
-
+import { ipcRenderer, WebviewTag } from 'electron';
 import Vue from 'vue';
 import Comopnent from 'vue-class-component';
-import { injectGlobal } from 'vue-emotion';
-import LocaleProvider from 'components/LocaleProvider';
+import styled, { injectGlobal } from 'vue-emotion';
+
+const isDevelopment = process.env.NODE_ENV !== 'production';
 
 // eslint-disable-next-line no-unused-expressions
 injectGlobal`
@@ -33,7 +33,7 @@ injectGlobal`
     &:before {
       content: '\\e601';
       display: block;
-      color: #4286f5;
+      color: white;
       font-family: icon;
       font-size: 32px;
       text-align: center;
@@ -43,35 +43,64 @@ injectGlobal`
   }
 `;
 
-const window = remote.getCurrentWindow();
+const Page = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+  width: calc(100% - 20px);
+  height: calc(100% - 19px);
+  border-radius: 6px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+`;
+
+const WebView = styled.webview`
+  flex-grow: 1;
+  margin-top: -57px;
+`;
 
 @Comopnent
 export default class App extends Vue {
-  private keymap = {
-    esc: this.handleEscape,
+  public readonly $refs!: {
+    webview: WebviewTag;
   };
 
-  private handleEscape() {
-    if (this.$route.name === 'translate') {
-      ipcRenderer.send('hideWindow');
-    } else {
-      this.$router.push('/');
+  mounted() {
+    const { webview } = this.$refs;
+    if (isDevelopment) {
+      webview.addEventListener('dom-ready', () => {
+        webview.openDevTools();
+      });
     }
-  }
-
-  created() {
-    document.addEventListener('mouseenter', () => {
-      window.focus();
+    ipcRenderer.on(
+      'translate-clipboard-text',
+      async (event: Event, arg: any) => {
+        if (arg) {
+          webview.send('translate-clipboard-text', arg);
+        }
+      },
+    );
+    window.addEventListener('focus', () => {
+      webview.focus();
     });
   }
 
   render() {
+    const initWebViewSrc = isDevelopment
+      ? `file://${process.cwd()}/public/js/initwebview.js`
+      : `file://${__dirname}/js/initwebview.js`;
     return (
-      <LocaleProvider locale="zh-CN" v-hotkey={this.keymap}>
-        <keep-alive exclude={['Language']}>
-          <router-view />
-        </keep-alive>
-      </LocaleProvider>
+      <div id="app">
+        <Page>
+          <WebView
+            tabIndex="0"
+            ref="webview"
+            preload={initWebViewSrc}
+            src="https://translate.google.cn/m/translate"
+            useragent="Mozilla/5.0 (Linux; Android 4.4.4; en-us; Nexus 4 Build/JOP40D) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2307.2 Mobile Safari/537.36"
+          />
+        </Page>
+      </div>
     );
   }
 }
