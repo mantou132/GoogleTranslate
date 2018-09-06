@@ -87,6 +87,10 @@ window.addEventListener('load', () => {
   const window = remote.getCurrentWindow();
 
   addEventListener('keydown', (e) => {
+    // command + shift + q
+    if (e.keyCode === 81 && e.shiftKey && (e.metaKey || e.ctrlKey)) {
+      remote.app.exit();
+    }
     // esc
     if (e.keyCode === 27) {
       ipcRenderer.send('hideWindow');
