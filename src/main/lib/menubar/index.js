@@ -54,7 +54,6 @@ module.exports = function create(opts) {
       iconPath = path.join(__dirname, 'example', 'IconTemplate.png');
     } // default cat icon
 
-    let cachedBounds; // cachedBounds are needed for double-clicked event
     const defaultClickEvent = opts.showOnRightClick ? 'right-click' : 'click';
 
     menubar.tray = opts.tray || new Tray(iconPath);
@@ -76,11 +75,10 @@ module.exports = function create(opts) {
     menubar.hideWindow = hideWindow;
     menubar.emit('ready');
 
-    function clicked(e, bounds) {
+    function clicked(e) {
       if (e.altKey || e.shiftKey || e.ctrlKey || e.metaKey) return hideWindow();
       if (menubar.window && menubar.window.isVisible()) return hideWindow();
-      cachedBounds = bounds || cachedBounds;
-      showWindow(cachedBounds);
+      showWindow();
     }
 
     function createWindow() {
@@ -107,7 +105,7 @@ module.exports = function create(opts) {
       menubar.emit('after-create-window');
     }
 
-    function showWindow(trayPos) {
+    function showWindow() {
       // if (supportsTrayHighlightState) menubar.tray.setHighlightMode('always');
       if (!menubar.window) {
         createWindow();
@@ -115,16 +113,7 @@ module.exports = function create(opts) {
 
       menubar.emit('show');
 
-      if (trayPos && trayPos.x !== 0) {
-        // Cache the bounds
-        cachedBounds = trayPos;
-      } else if (cachedBounds) {
-        // Cached value will be used if showWindow is called without bounds data
-        trayPos = cachedBounds;
-      } else if (menubar.tray.getBounds) {
-        // Get the current tray bounds
-        trayPos = menubar.tray.getBounds();
-      }
+      const trayPos = menubar.tray.getBounds();
 
       // Default the window to the right if `trayPos` bounds are undefined or null.
       let noBoundsPosition = null;

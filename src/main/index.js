@@ -1,7 +1,6 @@
 import {
   app,
   protocol,
-  systemPreferences,
   ipcMain,
   Menu,
   MenuItem,
@@ -58,12 +57,6 @@ function createMainWindow() {
 
   const { window } = mb;
   const { webContents } = window;
-
-  systemPreferences.setUserDefault(
-    'AppleShowScrollBars',
-    'string',
-    'Automatic',
-  );
 
   if (!isDevelopment) {
     const menu = new Menu();
