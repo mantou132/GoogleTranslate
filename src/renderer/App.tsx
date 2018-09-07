@@ -28,6 +28,7 @@ injectGlobal`
   body {
     margin: 0;
     overflow: hidden;
+    filter: drop-shadow(rgba(0, 0, 0, 0.2) 0px 1px 3.5px);
   }
   #app {
     &:before {
@@ -50,7 +51,6 @@ const Page = styled.div`
   width: calc(100% - 20px);
   height: calc(100% - 19px);
   border-radius: 6px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   overflow: hidden;
 `;
 
