@@ -10,6 +10,7 @@ import {
 import { format as formatUrl } from 'url';
 import path from 'path';
 import robotjs from 'robotjs';
+import AutoLaunch from 'auto-launch';
 import startCase from 'lodash/startCase';
 import {
   createProtocol,
@@ -19,6 +20,8 @@ import menubar from './lib/menubar';
 import checkForUpdates from './checkForUpdates';
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
+
+new AutoLaunch({ name: 'Google 翻译' }).enable();
 
 // global reference to mainWindow (necessary to prevent window from being garbage collected)
 let mainWindow;
