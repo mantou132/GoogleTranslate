@@ -1,6 +1,6 @@
 const { ipcRenderer, remote } = require('electron');
 
-window.addEventListener('load', () => {
+addEventListener('load', () => {
   const valueHistory = {
     currentPosition: 0,
     historyValuePool: [''],
@@ -111,24 +111,6 @@ window.addEventListener('load', () => {
     }
   });
 
-  const style = document.createElement('style');
-  style.innerHTML = `
-    #source {
-      max-height: none !important;
-    }
-    *:not(.moremenu) {
-      box-shadow: none !important;
-    }
-    ::-webkit-scrollbar,
-    .ad-panel {
-      display: none !important;
-    }
-    :focus {
-      outline: none !important;
-    }
-  `;
-  document.head.append(style);
-
   const sourceLabel = document.querySelector(
     '.tlid-open-small-source-language-list',
   );
@@ -152,4 +134,33 @@ window.addEventListener('load', () => {
     childList: true,
     subtree: false,
   });
+});
+
+addEventListener('DOMContentLoaded', () => {
+  const style = document.createElement('style');
+  style.innerHTML = `
+    #source {
+      max-height: none !important;
+    }
+    *:not(.moremenu) {
+      box-shadow: none !important;
+    }
+    ::-webkit-scrollbar,
+    .ad-panel {
+      display: none !important;
+    }
+    :focus {
+      outline: none !important;
+    }
+    .gb_Dd {
+      margin-top: -1px !important;
+      height: 0 !important;
+      overflow: hidden !important;
+      padding: 0 !important;
+    }
+    .frame {
+      height: 100vh !important;
+    }
+  `;
+  document.head.append(style);
 });

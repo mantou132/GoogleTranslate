@@ -56,7 +56,6 @@ const Page = styled.div`
 
 const WebView = styled.webview`
   flex-grow: 1;
-  margin-top: -57px;
 `;
 
 @Comopnent
