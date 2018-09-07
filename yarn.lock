@@ -6302,7 +6302,7 @@ node-gyp@^3.6.0:
 
 node-ipc@^9.1.1:
   version "9.1.1"
-  resolved "https://registry.npmjs.org/node-ipc/-/node-ipc-9.1.1.tgz#4e245ed6938e65100e595ebc5dc34b16e8dd5d69"
+  resolved "https://registry.yarnpkg.com/node-ipc/-/node-ipc-9.1.1.tgz#4e245ed6938e65100e595ebc5dc34b16e8dd5d69"
   dependencies:
     event-pubsub "4.3.0"
     js-message "1.0.5"
@@ -9540,6 +9540,10 @@ wcwidth@^1.0.1:
 wdio-dot-reporter@~0.0.8:
   version "0.0.10"
   resolved "https://registry.npmjs.org/wdio-dot-reporter/-/wdio-dot-reporter-0.0.10.tgz#facfb7c9c5984149951f59cbc3cd0752101cf0e0"
+
+web-ext-native-msg@^3.1.1:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/web-ext-native-msg/-/web-ext-native-msg-3.1.1.tgz#ae62259a34291e3562abda14710b33417c2a2099"
 
 webdriverio@^4.8.0:
   version "4.13.2"

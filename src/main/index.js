@@ -18,6 +18,11 @@ import {
 } from 'vue-cli-plugin-electron-builder/lib';
 import menubar from './lib/menubar';
 import checkForUpdates from './checkForUpdates';
+import {
+  isNativeMessagingHosts,
+  initNativeMessagingHosts,
+  initIpcService,
+} from './nativeMessage';
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
@@ -25,9 +30,6 @@ new AutoLaunch({ name: 'Google 翻译' }).enable();
 
 // global reference to mainWindow (necessary to prevent window from being garbage collected)
 let mainWindow;
-
-// Standard scheme must be registered before the app is ready
-protocol.registerStandardSchemes(['app'], { secure: true });
 
 function createMainWindow() {
   // https://electronjs.org/docs/api/browser-window
@@ -110,53 +112,61 @@ function createMainWindow() {
   return mb;
 }
 
-// quit application when all windows are closed
-app.on('window-all-closed', () => {
-  // on macOS it is common for applications to stay open until the user explicitly quits
-  if (process.platform !== 'darwin') {
-    app.quit();
-  }
-});
+if (isNativeMessagingHosts()) {
+  initNativeMessagingHosts();
+} else {
+  // Standard scheme must be registered before the app is ready
+  protocol.registerStandardSchemes(['app'], { secure: true });
 
-app.on('activate', () => {
-  // on macOS it is common to re-create a window even after all windows have been closed
-  if (mainWindow === null) {
-    mainWindow = createMainWindow();
-  }
-});
+  // quit application when all windows are closed
+  app.on('window-all-closed', () => {
+    // on macOS it is common for applications to stay open until the user explicitly quits
+    if (process.platform !== 'darwin') {
+      app.quit();
+    }
+  });
 
-// create main BrowserWindow when electron is ready
-app.on('ready', async () => {
-  try {
-    if (isDevelopment && !process.env.IS_TEST) {
-      // Install Vue Devtools
-      await installVueDevtools();
-    } else {
-      // Check for updates
-      checkForUpdates(); // do not await
-      ipcMain.on('check-for-updates', async (event, arg) => {
-        event.sender.send('check-for-updates', await checkForUpdates());
+  app.on('activate', () => {
+    // on macOS it is common to re-create a window even after all windows have been closed
+    if (mainWindow === null) {
+      mainWindow = createMainWindow();
+    }
+  });
+
+  // create main BrowserWindow when electron is ready
+  app.on('ready', async () => {
+    try {
+      if (isDevelopment && !process.env.IS_TEST) {
+        // Install Vue Devtools
+        await installVueDevtools();
+      } else {
+        // Check for updates
+        checkForUpdates(); // do not await
+        ipcMain.on('check-for-updates', async (event, arg) => {
+          event.sender.send('check-for-updates', await checkForUpdates());
+        });
+      }
+    } finally {
+      mainWindow = createMainWindow();
+      initIpcService(mainWindow);
+      globalShortcut.register('CommandOrControl+Q', async () => {
+        const { window } = mainWindow;
+        if (window.isVisible()) {
+          mainWindow.hideWindow();
+        } else {
+          const oldString = clipboard.readText();
+          robotjs.keyTap('c', 'command'); // Invalid when no selection text
+          await new Promise(resolve => setTimeout(resolve, 300));
+          const newString = clipboard.readText();
+          const trimStr = newString.trim();
+          const originStr = /^[a-zA-Z_-]+$/.test(trimStr)
+            ? startCase(trimStr)
+            : trimStr;
+          clipboard.writeText(oldString);
+          mainWindow.showWindow();
+          window.webContents.send('translate-clipboard-text', originStr);
+        }
       });
     }
-  } finally {
-    mainWindow = createMainWindow();
-    globalShortcut.register('CommandOrControl+Q', async () => {
-      const { window } = mainWindow;
-      if (window.isVisible()) {
-        mainWindow.hideWindow();
-      } else {
-        const oldString = clipboard.readText();
-        robotjs.keyTap('c', 'command'); // Invalid when no selection text
-        await new Promise(resolve => setTimeout(resolve, 300));
-        const newString = clipboard.readText();
-        const trimStr = newString.trim();
-        const originStr = /^[a-zA-Z_-]+$/.test(trimStr)
-          ? startCase(trimStr)
-          : trimStr;
-        clipboard.writeText(oldString);
-        mainWindow.showWindow();
-        window.webContents.send('translate-clipboard-text', originStr);
-      }
-    });
-  }
-});
+  });
+}
