@@ -128,4 +128,28 @@ window.addEventListener('load', () => {
     }
   `;
   document.head.append(style);
+
+  const sourceLabel = document.querySelector(
+    '.tlid-open-small-source-language-list',
+  );
+  const targetLabel = document.querySelector(
+    '.tlid-open-small-target-language-list',
+  );
+  const observer = new MutationObserver(() => {
+    const sourceMatch = sourceLabel.textContent.match(/检测到(.*)/);
+    const sourceStr = sourceMatch ? sourceMatch[1] : '';
+    const targetStr = targetLabel.textContent;
+    if (sourceStr && targetStr.includes(sourceStr)) {
+      if (sourceStr === '中文') {
+        _e(event, 'changeLanguage+0', 'tl_list_en_r');
+      } else {
+        _e(event, 'changeLanguage+0', 'tl_list_zh-CN');
+      }
+    }
+  });
+  observer.observe(sourceLabel, {
+    attributes: false,
+    childList: true,
+    subtree: false,
+  });
 });
