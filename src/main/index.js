@@ -30,7 +30,7 @@ function createMainWindow() {
   // https://electronjs.org/docs/api/browser-window
   const mb = menubar({
     title: 'Google Translate',
-    icon: path.join(__static, 'iconTemplate.ico'), // https://electronjs.org/docs/api/native-image
+    icon: path.join(__static, 'iconTemplate.png'), // https://electronjs.org/docs/api/native-image
     index: isDevelopment
       ? process.env.WEBPACK_DEV_SERVER_URL
       : formatUrl({
