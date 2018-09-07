@@ -12,6 +12,9 @@ module.exports = {
         appId: 'org.moefe.googletranslate',
         mac: {
           icon: 'build/bundled/icon.icns',
+          extendInfo: {
+            LSUIElement: 1,
+          },
         },
       },
     },
