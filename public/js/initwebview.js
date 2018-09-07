@@ -110,4 +110,22 @@ window.addEventListener('load', () => {
       }
     }
   });
+
+  const style = document.createElement('style');
+  style.innerHTML = `
+    #source {
+      max-height: none !important;
+    }
+    *:not(.moremenu) {
+      box-shadow: none !important;
+    }
+    ::-webkit-scrollbar,
+    .ad-panel {
+      display: none !important;
+    }
+    :focus {
+      outline: none !important;
+    }
+  `;
+  document.head.append(style);
 });

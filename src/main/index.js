@@ -47,7 +47,7 @@ function createMainWindow() {
     maximizable: false,
     showDockIcon: isDevelopment,
     transparent: true,
-    alwaysOnTop: false,
+    alwaysOnTop: isDevelopment,
     preloadWindow: true,
     webPreferences: {
       scrollBounce: true,
