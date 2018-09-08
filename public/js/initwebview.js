@@ -1,3 +1,8 @@
+/**
+ * 该脚本注入 Google 翻译页面运行
+ * 修改完需要 `command + r` 重新加载 Google 翻译页面
+ */
+
 const { ipcRenderer, remote } = require('electron');
 
 addEventListener('load', () => {
@@ -109,6 +114,12 @@ addEventListener('load', () => {
         responseTTS.click();
       }
     }
+  });
+
+  addEventListener('click', () => {
+    setTimeout(() => {
+      if (!getSelection().toString()) sourceTextArea.focus();
+    });
   });
 
   const sourceLabel = document.querySelector(
