@@ -86,8 +86,8 @@ export default class App extends Vue {
 
   render() {
     const initWebViewSrc = isDevelopment
-      ? `file://${process.cwd()}/public/js/initwebview.js`
-      : `file://${__dirname}/js/initwebview.js`;
+      ? `file://${process.cwd()}/build/dev/inject.js`
+      : `file://${__dirname}/js/inject.js`;
     return (
       <div id="app">
         <Page>

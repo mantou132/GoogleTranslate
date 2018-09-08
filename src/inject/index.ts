@@ -1,103 +1,25 @@
-/**
- * 该脚本注入 Google 翻译页面运行
- * 修改完需要 `command + r` 重新加载 Google 翻译页面
- */
+import { ipcRenderer, remote, clipboard } from 'electron';
+import { frequency } from './util';
+import textBoxHistory from './textboxhistory';
 
-const { ipcRenderer, remote, clipboard } = require('electron');
+window.addEventListener('load', () => {
+  const sourceTextArea = document.querySelector(
+    '#source',
+  ) as HTMLTextAreaElement;
+  const sourceTTS = document.querySelector('.src-tts') as HTMLDivElement;
+  const responseTTS = document.querySelector('.res-tts') as HTMLDivElement;
+  const responseContainer = document.querySelector(
+    '.tlid-translation',
+  ) as HTMLSpanElement;
 
-addEventListener('load', () => {
-  const valueHistory = {
-    currentPosition: 0,
-    historyValuePool: [''],
-  };
-  const sourceTextArea = document.querySelector('#source');
-
-  let isComposition = false;
-
-  ipcRenderer.on('translate-clipboard-text', (event, arg) => {
-    sourceTextArea.value = arg;
-    sourceTextArea.focus();
-    addValueToHistory(arg);
-  });
-
-  sourceTextArea.addEventListener('input', throttle(addValueToHistory, 1000));
-
-  sourceTextArea.addEventListener('compositionstart', handleComposition);
-  sourceTextArea.addEventListener('compositionupdate', handleComposition);
-  sourceTextArea.addEventListener('compositionend', handleComposition);
-
-  sourceTextArea.addEventListener('keydown', (e) => {
-    // command + y or command + shift + z
-    if (
-      (e.keyCode === 89 || (e.keyCode === 90 && e.shiftKey)) &&
-      (e.metaKey || e.ctrlKey)
-    ) {
-      e.preventDefault();
-      redo();
-    }
-    // command + z
-    if (e.keyCode === 90 && (e.metaKey || e.ctrlKey) && !e.shiftKey) {
-      e.preventDefault();
-      undo();
-    }
-  });
-
-  function handleComposition(e) {
-    isComposition = e.type !== 'compositionend';
-  }
-
-  function throttle(fn, delay = 500) {
-    let timer = 0;
-    return (...rest) => {
-      clearTimeout(timer);
-      timer = setTimeout(fn.bind(null, ...rest), delay);
-    };
-  }
-
-  function addValueToHistory(e) {
-    if (!isComposition) {
-      const text = (typeof e === 'string' ? e : e.target.value).trim();
-      if (
-        text === valueHistory.historyValuePool[valueHistory.currentPosition]
-      ) {
-        return;
-      }
-      valueHistory.historyValuePool.length = valueHistory.currentPosition + 1;
-      valueHistory.historyValuePool.push(text);
-      valueHistory.currentPosition += 1;
-    }
-  }
-
-  function undo() {
-    if (valueHistory.currentPosition) {
-      valueHistory.currentPosition -= 1;
-      sourceTextArea.value =
-        valueHistory.historyValuePool[valueHistory.currentPosition];
-    }
-  }
-
-  function redo() {
-    if (
-      valueHistory.currentPosition + 1 <
-      valueHistory.historyValuePool.length
-    ) {
-      valueHistory.currentPosition += 1;
-      sourceTextArea.value =
-        valueHistory.historyValuePool[valueHistory.currentPosition];
-    }
-  }
-
-  const sourceTTS = document.querySelector('.src-tts');
-  const responseTTS = document.querySelector('.res-tts');
-  const responseContainer = document.querySelector('.tlid-translation');
-
-  const responseCopy = responseTTS.cloneNode(true);
+  const responseCopy = responseTTS.cloneNode(true) as HTMLElement;
   responseCopy.setAttribute('data-tooltip', '复制');
   responseCopy.setAttribute('aria-label', '复制');
   responseCopy.classList.remove('res-tts');
   responseCopy.classList.add('res-copy');
   responseCopy.addEventListener('click', () => {
-    const response = responseContainer.textContent.trim();
+    const { textContent } = responseContainer;
+    const response = (textContent || '').trim();
     if (response) {
       clipboard.writeText(response);
       responseCopy.classList.add('done');
@@ -108,16 +30,25 @@ addEventListener('load', () => {
   });
   responseTTS.after(responseCopy);
 
-  addEventListener('click', () => {
+  const sourceTextHistory = textBoxHistory(sourceTextArea);
+
+  ipcRenderer.on('translate-clipboard-text', (event: any, arg: string) => {
+    sourceTextArea.value = arg;
+    sourceTextArea.focus();
+    sourceTextHistory.addValueToHistory(arg);
+  });
+
+  window.addEventListener('click', () => {
     setTimeout(() => {
       if (!getSelection().toString()) sourceTextArea.focus();
     });
   });
 
-  addEventListener('keydown', (e) => {
-    // command + shift + q
-    if (e.keyCode === 81 && e.shiftKey && (e.metaKey || e.ctrlKey)) {
-      remote.app.exit();
+  const exitApp = frequency(() => remote.app.quit());
+  window.addEventListener('keydown', (e) => {
+    // command + shift + w
+    if (e.keyCode === 87 && e.shiftKey && (e.metaKey || e.ctrlKey)) {
+      exitApp();
     }
     // esc
     if (e.keyCode === 27) {
@@ -137,7 +68,7 @@ addEventListener('load', () => {
     }
     // command + 3
     if (e.keyCode === 51 && (e.metaKey || e.ctrlKey)) {
-      if (responseContainer.textContent.trim()) {
+      if ((responseContainer.textContent || '').trim()) {
         responseCopy.click();
       }
     }
@@ -145,19 +76,25 @@ addEventListener('load', () => {
 
   const sourceLabel = document.querySelector(
     '.tlid-open-small-source-language-list',
-  );
+  ) as HTMLDivElement;
   const targetLabel = document.querySelector(
     '.tlid-open-small-target-language-list',
-  );
+  ) as HTMLDivElement;
+  const enLabel = document.querySelector(
+    '[onclick*=tl_list_en]',
+  ) as HTMLDivElement;
+  const zhLabel = document.querySelector(
+    '[onclick*=tl_list_zh-CN]',
+  ) as HTMLDivElement;
   const observer = new MutationObserver(() => {
-    const sourceMatch = sourceLabel.textContent.match(/检测到(.*)/);
+    const sourceMatch = (sourceLabel.textContent || '').match(/检测到(.*)/);
     const sourceStr = sourceMatch ? sourceMatch[1] : '';
-    const targetStr = targetLabel.textContent;
+    const targetStr = targetLabel.textContent || '';
     if (sourceStr && targetStr.includes(sourceStr)) {
       if (sourceStr === '中文') {
-        _e(event, 'changeLanguage+0', 'tl_list_en_r');
+        enLabel.click();
       } else {
-        _e(event, 'changeLanguage+0', 'tl_list_zh-CN');
+        zhLabel.click();
       }
     }
   });
@@ -168,7 +105,7 @@ addEventListener('load', () => {
   });
 });
 
-addEventListener('DOMContentLoaded', () => {
+window.addEventListener('DOMContentLoaded', () => {
   const style = document.createElement('style');
   style.innerHTML = `
     #source {

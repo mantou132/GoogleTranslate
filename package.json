@@ -54,7 +54,8 @@
     "vue-cli-plugin-electron-builder": "1.0.0-rc.2",
     "vue-jsx-hot-loader": "^1.4.0",
     "vue-template-compiler": "^2.5.17",
-    "vue-tsx-support": "^2.1.1"
+    "vue-tsx-support": "^2.1.1",
+    "write-file-webpack-plugin": "^4.4.0"
   },
   "browserslist": [
     "> 1%",
