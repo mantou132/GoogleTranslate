@@ -143,6 +143,7 @@ module.exports = function create(opts) {
       if (!menubar.window) return;
       menubar.emit('hide');
       menubar.window.hide();
+      app.hide();
       menubar.emit('after-hide');
     }
 
