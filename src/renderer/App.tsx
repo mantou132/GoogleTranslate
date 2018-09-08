@@ -1,4 +1,4 @@
-import { ipcRenderer, WebviewTag } from 'electron';
+import { ipcRenderer, WebviewTag, remote } from 'electron';
 import Vue from 'vue';
 import Comopnent from 'vue-class-component';
 import styled, { injectGlobal } from 'vue-emotion';
@@ -71,6 +71,12 @@ export default class App extends Vue {
         webview.openDevTools();
       });
     }
+    webview.addEventListener('devtools-opened', () => {
+      remote.getCurrentWindow().setAlwaysOnTop(true);
+    });
+    webview.addEventListener('devtools-closed', () => {
+      remote.getCurrentWindow().setAlwaysOnTop(false);
+    });
     ipcRenderer.on(
       'translate-clipboard-text',
       async (event: Event, arg: any) => {

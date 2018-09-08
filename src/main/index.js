@@ -86,6 +86,13 @@ function createMainWindow() {
 
   if (isDevelopment && !process.env.IS_TEST) {
     webContents.openDevTools({ mode: 'undocked' });
+  } else {
+    webContents.on('devtools-opened', () => {
+      window.setAlwaysOnTop(true);
+    });
+    webContents.on('devtools-closed', () => {
+      window.setAlwaysOnTop(false);
+    });
   }
 
   window.on('closed', () => {
@@ -96,13 +103,6 @@ function createMainWindow() {
     webContents.setZoomFactor(1);
     webContents.setVisualZoomLevelLimits(1, 1);
     webContents.setLayoutZoomLevelLimits(0, 0);
-  });
-
-  webContents.on('devtools-opened', () => {
-    window.focus();
-    setImmediate(() => {
-      window.focus();
-    });
   });
 
   mb.on('after-show', () => {
