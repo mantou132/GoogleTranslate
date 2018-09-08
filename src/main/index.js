@@ -26,7 +26,9 @@ import {
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
-new AutoLaunch({ name: 'Google 翻译' }).enable();
+if (!isDevelopment) {
+  new AutoLaunch({ name: 'Google 翻译' }).enable();
+}
 
 // global reference to mainWindow (necessary to prevent window from being garbage collected)
 let mainWindow;
