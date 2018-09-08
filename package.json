@@ -14,23 +14,14 @@
     "contributors": "all-contributors"
   },
   "dependencies": {
-    "animejs": "^2.2.0",
     "auto-launch": "^5.0.5",
-    "autosize": "^4.0.2",
-    "keycode": "^2.2.0",
     "lodash": "^4.17.10",
     "node-ipc": "^9.1.1",
     "robotjs": "^0.5.1",
-    "store": "^2.0.12",
-    "translation.js": "^0.7.5",
-    "v-hotkey": "^0.2.3",
     "vue": "^2.5.17",
     "vue-class-component": "^6.2.0",
     "vue-emotion": "^0.4.2",
-    "vue-property-decorator": "^7.0.0",
     "vue-router": "^3.0.1",
-    "vuex": "^3.0.1",
-    "vuex-class": "^0.3.1",
     "web-ext-native-msg": "^3.1.1"
   },
   "devDependencies": {
