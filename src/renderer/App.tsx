@@ -56,6 +56,7 @@ const Page = styled.div`
 `;
 
 const WebView = styled.webview`
+  background: white;
   flex-grow: 1;
 `;
 
@@ -102,8 +103,8 @@ export default class App extends Vue {
             tabIndex="0"
             ref="webview"
             preload={initWebViewSrc}
-            src="https://translate.google.cn/m/translate"
-            useragent="Mozilla/5.0 (Linux; Android 4.4.4; en-us; Nexus 4 Build/JOP40D) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2307.2 Mobile Safari/537.36"
+            allowpopups
+            src="https://translate.google.com/m/translate"
           />
         </Page>
       </div>

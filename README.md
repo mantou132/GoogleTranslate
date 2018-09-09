@@ -13,25 +13,22 @@
 
 > 🌐 Google 翻译 Mac 客户端（Forked from [MoeFE/GoogleTranslate](https://github.com/MoeFE/GoogleTranslate)）
 
-## 状态：公测版
-
-所有已知问题都已经修复，并优化了用户体验，但可能依然有少量 BUG。
-如果你在使用中发现了问题，请在[这里](https://github.com/mantou132/GoogleTranslate/issues/new)报告问题，非常感谢！
-
 ## 预览
 
 <img alt="应用程序主界面" src="./screenshot/Screen Shot 2018-09-08 at 07.59.35.png" width="420">
 
-## 功能
+## 使用方式
 
-- [x] Google 翻译
-- [x] [浏览器上下文菜单项呼出](https://github.com/mantou132/CallGoogleTranslate)
-- [x] 语音朗读
-- [x] 顶端显示
-- [x] 开机启动
-- [x] ~~自动更新~~
-- [x] 全局快捷键(<kbd>command</kbd> + <kbd>q</kbd>`)呼出
-- [x] ~~内置多种翻译引擎~~
+- 安装浏览器[扩展](https://github.com/mantou132/CallGoogleTranslate)，在浏览器中选择文本，使用上下文菜单进行翻译
+- 在任意应用中选择文本，使用 <kbd>command</kbd> + <kbd>q</kbd> 进行翻译
+- 在窗口内使用快捷键：<br>
+  <kbd>esc</kbd> - 关闭窗口<br>
+  <kbd>enter</kbd> - 聚焦到输入框<br>
+  <kbd>command</kbd> + <kbd>1</kbd> - 全局快捷键<br>
+  <kbd>command</kbd> + <kbd>2</kbd> - 全局快捷键<br>
+  <kbd>command</kbd> + <kbd>i</kbd> - 登陆 Google 账号<br>
+  <kbd>command</kbd> + <kbd>o</kbd> - 登出 Google 账号<br>
+  <kbd>command</kbd> + <kbd>shift</kbd> + <kbd>w</kbd> 连续按两次 - 退出应用
 
 ## 下载
 
