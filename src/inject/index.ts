@@ -19,6 +19,8 @@ window.addEventListener('load', () => {
 
   const sourceTextHistory = textBoxHistory(sourceTextArea);
 
+  sourceTextArea.focus();
+
   ipcRenderer.on('translate-clipboard-text', (event: any, arg: string) => {
     sourceTextArea.focus();
     if (!arg) return; // 没有选择的文本
