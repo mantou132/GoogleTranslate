@@ -1,6 +1,9 @@
-window.addEventListener('DOMContentLoaded', () => {
-  const style = document.createElement('style');
-  style.innerHTML = `
+export default () => {
+  // eslint-disable-next-line global-require
+  const { injectGlobal } = require('emotion'); // 库中直接操作了 DOM，不能使用顶部 import
+
+  // eslint-disable-next-line no-unused-expressions
+  injectGlobal`
     #source {
       max-height: none !important;
       padding-right: 50px !important;
@@ -29,5 +32,4 @@ window.addEventListener('DOMContentLoaded', () => {
       border-color: transparent !important;
     }
   `;
-  document.head.append(style);
-});
+};

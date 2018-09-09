@@ -1,19 +1,17 @@
-import { ipcRenderer, remote, clipboard } from 'electron';
+import { ipcRenderer, remote } from 'electron';
 import { frequency } from './util';
 import textBoxHistory from './textboxhistory';
+import injectCSS from './injectCSS';
 import lang from './lang';
-import './style';
+import config from '../config';
 
-window.addEventListener('load', () => {
+const initTranslatePage = () => {
   const i18n = lang();
   const sourceTextArea = document.querySelector(
     '#source',
   ) as HTMLTextAreaElement;
   const sourceTTS = document.querySelector('.src-tts') as HTMLDivElement;
   const responseTTS = document.querySelector('.res-tts') as HTMLDivElement;
-  const responseContainer = document.querySelector(
-    '.tlid-translation',
-  ) as HTMLSpanElement;
   const signIn = document.querySelector('.gb_Aa.gb_Fb') as HTMLAnchorElement;
   const signOut = document.querySelector('#gb_71') as HTMLAnchorElement;
 
@@ -94,4 +92,17 @@ window.addEventListener('load', () => {
     childList: true,
     subtree: false,
   });
-});
+};
+
+if (window.location.href.startsWith(config.translateUrl)) {
+  ipcRenderer.sendToHost('header-background-change', 'white');
+  window.addEventListener('DOMContentLoaded', injectCSS);
+  window.addEventListener('load', initTranslatePage);
+} else {
+  ipcRenderer.sendToHost('header-background-change', '#4285f4');
+  window.addEventListener('keydown', (e) => {
+    if (e.keyCode === 8) {
+      window.location.href = config.translateUrl;
+    }
+  });
+}

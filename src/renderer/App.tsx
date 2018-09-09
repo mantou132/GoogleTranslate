@@ -1,46 +1,24 @@
-import { ipcRenderer, WebviewTag, remote } from 'electron';
+import { ipcRenderer, WebviewTag, remote, IpcMessageEvent } from 'electron';
 import Vue from 'vue';
 import Comopnent from 'vue-class-component';
-import styled, { injectGlobal } from 'vue-emotion';
+import styled from 'vue-emotion';
+
+import config from '../config';
+import './globalCSS';
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
-// eslint-disable-next-line no-unused-expressions
-injectGlobal`
-  * {
-    backface-visibility: hidden;
-    box-sizing: border-box;
-  }
-  html,
-  body,
-  #app {
-    height: 100%;
-  }
-  html {
-    -webkit-font-smoothing: antialiased;
-    -webkit-user-drag: none;
-    user-select: none;
-    font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Ubuntu,
-      Helvetica Neue, sans-serif;
-    font-weight: 300;
-    cursor: default;
-  }
-  body {
-    margin: 0;
-    overflow: hidden;
-    filter: drop-shadow(rgba(0, 0, 0, 0.5) 0px 0px .5px); // 作为边框
-  }
-  #app {
-    &:before {
-      content: '\\e601';
-      display: block;
-      color: white;
-      font-family: icon;
-      font-size: 32px;
-      text-align: center;
-      line-height: 0.3;
-      transform: rotate(180deg);
-    }
+const Wrap = styled.div<{ color: string }>`
+  height: 100%;
+  &:before {
+    content: '\\e601';
+    display: block;
+    color: ${props => props.color};
+    font-family: icon;
+    font-size: 32px;
+    text-align: center;
+    line-height: 0.3;
+    transform: rotate(180deg);
   }
 `;
 
@@ -62,6 +40,7 @@ const WebView = styled.webview`
 
 @Comopnent
 export default class App extends Vue {
+  color = 'white';
   public readonly $refs!: {
     webview: WebviewTag;
   };
@@ -79,35 +58,49 @@ export default class App extends Vue {
     webview.addEventListener('devtools-closed', () => {
       remote.getCurrentWindow().setAlwaysOnTop(false);
     });
-    ipcRenderer.on(
-      'translate-clipboard-text',
-      async (event: Event, arg: any) => {
-        if (arg) {
-          webview.send('translate-clipboard-text', arg);
+    webview.addEventListener('new-window', (e) => {
+      webview.loadURL(e.url);
+    });
+    webview.addEventListener(
+      'ipc-message',
+      ({ channel, args }: IpcMessageEvent) => {
+        if (channel === 'header-background-change') {
+          const [arg] = args;
+          if (arg) {
+            this.color = arg;
+          }
         }
       },
     );
+    ipcRenderer.on('translate-clipboard-text', async (e: Event, arg: any) => {
+      if (arg) {
+        webview.send('translate-clipboard-text', arg);
+      }
+    });
     window.addEventListener('focus', () => {
       webview.focus();
     });
   }
 
   render() {
-    const initWebViewSrc = isDevelopment
-      ? `file://${process.cwd()}/build/dev/inject.js`
-      : `file://${__dirname}/js/inject.js`;
+    const { color } = this;
     return (
-      <div id="app">
+      <Wrap color={color}>
         <Page>
           <WebView
             tabIndex="0"
             ref="webview"
-            preload={initWebViewSrc}
+            preload={
+              isDevelopment
+                ? `file://${process.cwd()}/build/dev/inject.js`
+                : `file://${__dirname}/js/inject.js`
+            }
             allowpopups
-            src="https://translate.google.com/m/translate"
+            useragent="Mozilla/5.0 (Linux; Android 4.4.4; en-us; Nexus 4 Build/JOP40D) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2307.2 Mobile Safari/537.36"
+            src={config.translateUrl}
           />
         </Page>
-      </div>
+      </Wrap>
     );
   }
 }
