@@ -48,7 +48,7 @@ export function installNativeMessageManifest() {
 export function initIpcService(mainWindow) {
   installNativeMessageManifest();
   ipc.config.id = 'google-translate';
-  ipc.config.retry = 1500;
+  ipc.config.retry = 1000;
   ipc.config.silent = true;
   ipc.serve(() =>
     ipc.server.on('translate-text', (message) => {
@@ -66,13 +66,13 @@ export function initIpcService(mainWindow) {
 
 export function initIpcClient() {
   ipc.config.id = 'native-message-host';
-  ipc.config.retry = 1500;
+  ipc.config.retry = 1000;
   ipc.config.silent = true;
   new Promise((resolve, reject) => {
     ipc.connectTo('google-translate', () => {
       ipc.of['google-translate'].on('connect', resolve);
     });
-    setTimeout(reject, 1000);
+    setTimeout(reject, ipc.config.retry * 5);
   }).catch(() => {
     spawn(process.argv[0], {
       detached: true,
