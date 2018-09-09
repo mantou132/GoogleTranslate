@@ -28,7 +28,7 @@ injectGlobal`
   body {
     margin: 0;
     overflow: hidden;
-    filter: drop-shadow(rgba(0, 0, 0, 0.2) 0px 1px 3.5px);
+    filter: drop-shadow(rgba(0, 0, 0, 0.5) 0px 0px .5px); // 作为边框
   }
   #app {
     &:before {
@@ -52,6 +52,7 @@ const Page = styled.div`
   height: calc(100% - 19px);
   border-radius: 6px;
   overflow: hidden;
+  box-shadow: 0 1px 10px rgba(0, 0, 0, 0.15);
 `;
 
 const WebView = styled.webview`
