@@ -33,8 +33,9 @@ window.addEventListener('load', () => {
   const sourceTextHistory = textBoxHistory(sourceTextArea);
 
   ipcRenderer.on('translate-clipboard-text', (event: any, arg: string) => {
-    sourceTextArea.value = arg;
     sourceTextArea.focus();
+    if (!arg) return; // 没有选择的文本
+    sourceTextArea.value = arg;
     sourceTextHistory.addValueToHistory(arg);
   });
 

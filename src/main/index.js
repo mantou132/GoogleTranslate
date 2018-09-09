@@ -157,6 +157,7 @@ if (isNativeMessagingHosts()) {
           mainWindow.hideWindow();
         } else {
           const oldString = clipboard.readText();
+          clipboard.writeText(''); // clear clipboard text
           robotjs.keyTap('c', 'command'); // Invalid when no selection text
           await new Promise(resolve => setTimeout(resolve, 300));
           const newString = clipboard.readText();
