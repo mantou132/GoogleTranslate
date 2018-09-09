@@ -25,7 +25,11 @@ export default function (arg: any) {
   }
 
   function undo() {
-    if (valueHistory.currentPosition) {
+    const recentHistoryValue =
+      valueHistory.historyValuePool[valueHistory.currentPosition];
+    if (textarea.value !== recentHistoryValue) {
+      textarea.value = recentHistoryValue;
+    } else if (valueHistory.currentPosition) {
       valueHistory.currentPosition -= 1;
       textarea.value =
         valueHistory.historyValuePool[valueHistory.currentPosition];
