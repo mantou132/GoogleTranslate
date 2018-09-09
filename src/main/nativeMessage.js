@@ -1,4 +1,5 @@
 import process from 'process';
+import psTree from 'ps-tree';
 import path from 'path';
 import {
   Input,
@@ -118,4 +119,24 @@ export function initNativeMessagingHosts() {
   };
 
   process.stdin.on('data', readStdin);
+
+  const timer = setInterval(() => {
+    psTree(process.pid, (err, children) => {
+      if (children.length > 1) {
+        children
+          .filter(
+            ({ COMM, PPID }) =>
+              COMM.includes('Helper') && PPID === `${process.pid}`,
+          )
+          .forEach(({ PID }) => {
+            clearInterval(timer);
+            try {
+              process.kill(PID);
+            } catch (e) {
+              //
+            }
+          });
+      }
+    });
+  }, 10000);
 }
