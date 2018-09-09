@@ -27,7 +27,12 @@ import {
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
 if (!isDevelopment) {
-  new AutoLaunch({ name: 'Google 翻译' }).enable();
+  const googleTranslateAutoLaunch = new AutoLaunch({ name: 'Google 翻译' });
+  googleTranslateAutoLaunch.isEnabled().then((isEnabled) => {
+    if (!isEnabled) {
+      googleTranslateAutoLaunch.enable();
+    }
+  });
 }
 
 // global reference to mainWindow (necessary to prevent window from being garbage collected)
