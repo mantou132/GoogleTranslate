@@ -13,10 +13,6 @@
 
 > 🌐 Google 翻译 Mac 客户端（Forked from [MoeFE/GoogleTranslate](https://github.com/MoeFE/GoogleTranslate)）
 
-## 预览
-
-<img alt="应用程序主界面" src="./screenshot/Screen Shot 2018-09-08 at 07.59.35.png" width="420">
-
 ## 使用方式
 
 - 安装浏览器[扩展](https://github.com/mantou132/CallGoogleTranslate)，在浏览器中选择文本，使用上下文菜单进行翻译
@@ -24,11 +20,17 @@
 - 在窗口内使用快捷键：<br>
   <kbd>esc</kbd> - 关闭窗口<br>
   <kbd>enter</kbd> - 聚焦到输入框<br>
-  <kbd>command</kbd> + <kbd>1</kbd> - 全局快捷键<br>
-  <kbd>command</kbd> + <kbd>2</kbd> - 全局快捷键<br>
+  <kbd>command</kbd> + <kbd>back</kbd> - 回到翻译页面<br>
+  <kbd>command</kbd> + <kbd>1</kbd> - 朗读源文本<br>
+  <kbd>command</kbd> + <kbd>2</kbd> - 朗读翻译文本<br>
   <kbd>command</kbd> + <kbd>i</kbd> - 登陆 Google 账号<br>
   <kbd>command</kbd> + <kbd>o</kbd> - 登出 Google 账号<br>
   <kbd>command</kbd> + <kbd>shift</kbd> + <kbd>w</kbd> 连续按两次 - 退出应用
+
+## 预览
+
+<img alt="应用程序主界面" src="./screenshot/Screen Shot 2018-09-10 at 15.03.15.png" width="320">
+<img alt="应用程序主界面" src="./screenshot/Screen Shot 2018-09-10 at 15.03.51.png" width="320">
 
 ## 下载
 

@@ -101,7 +101,8 @@ if (window.location.href.startsWith(config.translateUrl)) {
 } else {
   ipcRenderer.sendToHost('header-background-change', '#4285f4');
   window.addEventListener('keydown', (e) => {
-    if (e.keyCode === 8) {
+    // command + back
+    if (e.keyCode === 8 && (e.metaKey || e.ctrlKey)) {
       window.location.href = config.translateUrl;
     }
   });
