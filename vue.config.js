@@ -1,6 +1,5 @@
 /* eslint-disable global-require */
 const WriteFilePlugin = require('write-file-webpack-plugin');
-const path = require('path');
 
 module.exports = {
   outputDir: 'build/dev',
@@ -25,6 +24,10 @@ module.exports = {
       builderOptions: {
         productName: 'Google 翻译',
         appId: 'org.moefe.googletranslate',
+        extraResources: {
+          from: 'src/extensionapp/extensionapp',
+          to: './',
+        },
         mac: {
           icon: 'build/bundled/icon.icns',
           extendInfo: {

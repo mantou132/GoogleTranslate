@@ -1,40 +1,30 @@
 import process from 'process';
-import psTree from 'ps-tree';
 import path from 'path';
-import {
-  Input,
-  Output,
-  getAbsPath,
-  createFile,
-  createDir,
-  isFile,
-} from 'web-ext-native-msg';
+import { getAbsPath, createFile, createDir } from 'web-ext-native-msg';
 import ipc from 'node-ipc';
 import startCase from 'lodash/startCase';
-import { app } from 'electron';
-import { spawn } from 'child_process';
 
-export function installNativeMessageManifest() {
+export function installNativeMessageManifest(isDevelopment) {
   [
     {
       dir: '~/Library/Application Support/Mozilla/NativeMessagingHosts',
     },
-    {
-      dir: '~/Library/Application Support/Google/Chrome/NativeMessagingHosts',
-    },
+    // {
+    //   dir: '~/Library/Application Support/Google/Chrome/NativeMessagingHosts',
+    // },
   ].forEach((opt) => {
     const dirArr = getAbsPath(opt.dir).split(path.sep);
     dirArr[0] = path.sep;
     createDir(dirArr);
-    const filePath = getAbsPath(`${opt.dir}/google_translate.json`);
-    if (isFile(filePath)) return;
     createFile(
-      filePath,
+      getAbsPath(`${opt.dir}/google_translate.json`),
       JSON.stringify(
         {
           name: 'google_translate',
           description: '谷歌翻译',
-          path: process.argv[0],
+          path: isDevelopment
+            ? `${process.cwd()}/src/extensionapp/extensionapp`
+            : `${process.resourcesPath}/extensionapp`,
           type: 'stdio',
           allowed_extensions: ['{fa233117-785b-4da4-a4a2-6f5312c6381b}'],
         },
@@ -46,8 +36,8 @@ export function installNativeMessageManifest() {
   });
 }
 
-export function initIpcService(mainWindow) {
-  installNativeMessageManifest();
+export function initIpcService(mainWindow, isDevelopment) {
+  installNativeMessageManifest(isDevelopment);
   ipc.config.id = 'google-translate';
   ipc.config.retry = 1000;
   ipc.config.silent = true;
@@ -63,80 +53,4 @@ export function initIpcService(mainWindow) {
     }),
   );
   ipc.server.start();
-}
-
-export function initIpcClient() {
-  ipc.config.id = 'native-message-host';
-  ipc.config.retry = 1000;
-  ipc.config.silent = true;
-  new Promise((resolve, reject) => {
-    ipc.connectTo('google-translate', () => {
-      ipc.of['google-translate'].on('connect', resolve);
-    });
-    setTimeout(reject, ipc.config.retry * 5);
-  }).catch(() => {
-    spawn(process.argv[0], {
-      detached: true,
-      stdio: 'ignore',
-    }).unref();
-  });
-
-  return {
-    translateText(text) {
-      ipc.of['google-translate'].emit('translate-text', text);
-    },
-  };
-}
-
-export function isNativeMessagingHosts() {
-  return process.argv[1] && process.argv[1].includes('NativeMessagingHosts');
-}
-
-export function initNativeMessagingHosts() {
-  const { translateText } = initIpcClient();
-
-  const writeStdout = async (msg) => {
-    const str = await new Output().encode(msg);
-    return str && process.stdout.write(str);
-  };
-
-  const handleMsg = async (msg) => {
-    translateText(msg);
-    writeStdout('pong');
-  };
-
-  const input = new Input();
-
-  const readStdin = (chunk) => {
-    const arr = input.decode(chunk);
-    const func = [];
-    if (Array.isArray(arr) && arr.length) {
-      arr.forEach((msg) => {
-        if (msg) func.push(handleMsg(msg));
-      });
-    }
-    return Promise.all(func);
-  };
-
-  process.stdin.on('data', readStdin);
-
-  const timer = setInterval(() => {
-    psTree(process.pid, (err, children) => {
-      if (children.length > 1) {
-        children
-          .filter(
-            ({ COMM, PPID }) =>
-              COMM.includes('Helper') && PPID === `${process.pid}`,
-          )
-          .forEach(({ PID }) => {
-            clearInterval(timer);
-            try {
-              process.kill(PID);
-            } catch (e) {
-              //
-            }
-          });
-      }
-    });
-  }, 10000);
 }

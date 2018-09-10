@@ -18,11 +18,7 @@ import {
 } from 'vue-cli-plugin-electron-builder/lib';
 import menubar from './lib/menubar';
 import checkForUpdates from './checkForUpdates';
-import {
-  isNativeMessagingHosts,
-  initNativeMessagingHosts,
-  initIpcService,
-} from './nativeMessage';
+import { initIpcService } from './nativeMessage';
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
@@ -71,15 +67,6 @@ function createMainWindow() {
   const { webContents } = window;
 
   if (!isDevelopment) {
-    const menu = new Menu();
-    menu.append(
-      new MenuItem({
-        role: 'about',
-        submenu: [{ role: 'toggledevtools' }],
-      }),
-    );
-    menu.append(new MenuItem({ role: 'editMenu' }));
-    Menu.setApplicationMenu(menu);
     createProtocol('app');
   }
 
@@ -119,62 +106,58 @@ function createMainWindow() {
   return mb;
 }
 
-if (isNativeMessagingHosts()) {
-  initNativeMessagingHosts();
-} else {
-  // Standard scheme must be registered before the app is ready
-  protocol.registerStandardSchemes(['app'], { secure: true });
+// Standard scheme must be registered before the app is ready
+protocol.registerStandardSchemes(['app'], { secure: true });
 
-  // quit application when all windows are closed
-  app.on('window-all-closed', () => {
-    // on macOS it is common for applications to stay open until the user explicitly quits
-    if (process.platform !== 'darwin') {
-      app.quit();
-    }
-  });
+// quit application when all windows are closed
+app.on('window-all-closed', () => {
+  // on macOS it is common for applications to stay open until the user explicitly quits
+  if (process.platform !== 'darwin') {
+    app.quit();
+  }
+});
 
-  app.on('activate', () => {
-    // on macOS it is common to re-create a window even after all windows have been closed
-    if (mainWindow === null) {
-      mainWindow = createMainWindow();
-    }
-  });
+app.on('activate', () => {
+  // on macOS it is common to re-create a window even after all windows have been closed
+  if (mainWindow === null) {
+    mainWindow = createMainWindow();
+  }
+});
 
-  // create main BrowserWindow when electron is ready
-  app.on('ready', async () => {
-    try {
-      if (isDevelopment && !process.env.IS_TEST) {
-        // Install Vue Devtools
-        await installVueDevtools();
-      } else {
-        // Check for updates
-        checkForUpdates(); // do not await
-        ipcMain.on('check-for-updates', async (event, arg) => {
-          event.sender.send('check-for-updates', await checkForUpdates());
-        });
-      }
-    } finally {
-      mainWindow = createMainWindow();
-      initIpcService(mainWindow);
-      globalShortcut.register('CommandOrControl+Q', async () => {
-        const { window } = mainWindow;
-        if (window.isVisible()) {
-          mainWindow.hideWindow();
-        } else {
-          const oldString = clipboard.readText();
-          clipboard.writeText(''); // clear clipboard text
-          robotjs.keyTap('c', 'command'); // Invalid when no selection text
-          await new Promise(resolve => setTimeout(resolve, 300));
-          const newString = clipboard.readText();
-          const trimStr = newString.trim();
-          const originStr = /^[a-zA-Z_-]+$/.test(trimStr)
-            ? startCase(trimStr)
-            : trimStr;
-          clipboard.writeText(oldString);
-          mainWindow.showWindow();
-          window.webContents.send('translate-clipboard-text', originStr);
-        }
+// create main BrowserWindow when electron is ready
+app.on('ready', async () => {
+  try {
+    if (isDevelopment && !process.env.IS_TEST) {
+      // Install Vue Devtools
+      await installVueDevtools();
+    } else {
+      // Check for updates
+      checkForUpdates(); // do not await
+      ipcMain.on('check-for-updates', async (event) => {
+        event.sender.send('check-for-updates', await checkForUpdates());
       });
     }
-  });
-}
+  } finally {
+    mainWindow = createMainWindow();
+    initIpcService(mainWindow, isDevelopment);
+    globalShortcut.register('CommandOrControl+Q', async () => {
+      const { window } = mainWindow;
+      if (window.isVisible()) {
+        mainWindow.hideWindow();
+      } else {
+        const oldString = clipboard.readText();
+        clipboard.writeText(''); // clear clipboard text
+        robotjs.keyTap('c', 'command'); // Invalid when no selection text
+        await new Promise(resolve => setTimeout(resolve, 300));
+        const newString = clipboard.readText();
+        const trimStr = newString.trim();
+        const originStr = /^[a-zA-Z_-]+$/.test(trimStr)
+          ? startCase(trimStr)
+          : trimStr;
+        clipboard.writeText(oldString);
+        mainWindow.showWindow();
+        window.webContents.send('translate-clipboard-text', originStr);
+      }
+    });
+  }
+});
