@@ -96,7 +96,7 @@ export default class App extends Vue {
                 : `file://${__dirname}/js/inject.js`
             }
             allowpopups
-            useragent="Mozilla/5.0 (Linux; Android 4.4.4; en-us; Nexus 4 Build/JOP40D) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2307.2 Mobile Safari/537.36"
+            useragent="Mozilla/5.0 (Linux; Android 7.1.1; E5823) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.2 Mobile Safari/537.36"
             src={config.translateUrl}
           />
         </Page>
