@@ -19,7 +19,8 @@
 - 在任意应用中选择文本，使用 <kbd>command</kbd> + <kbd>q</kbd> 进行翻译
 - 在窗口内使用快捷键：<br>
   <kbd>esc</kbd> - 关闭窗口<br>
-  <kbd>enter</kbd> - 聚焦到输入框<br>
+  <kbd>enter</kbd> - Google 翻译页面聚焦到输入框<br>
+  <kbd>command</kbd> + <kbd>r</kbd> - 刷新页面<br>
   <kbd>command</kbd> + <kbd>back</kbd> - 回到翻译页面<br>
   <kbd>command</kbd> + <kbd>1</kbd> - 朗读源文本<br>
   <kbd>command</kbd> + <kbd>2</kbd> - 朗读翻译文本<br>

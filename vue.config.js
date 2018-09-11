@@ -12,7 +12,7 @@ module.exports = {
       filename: 'index.html',
     },
     inject: {
-      entry: './src/inject/index.ts',
+      entry: './src/renderer/inject/index.ts',
       filename: 'inject.html',
     },
   },

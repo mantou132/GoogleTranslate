@@ -1,9 +1,11 @@
-import { ipcRenderer, remote } from 'electron';
-import { frequency } from './util';
+import { ipcRenderer } from 'electron';
 import textBoxHistory from './textboxhistory';
 import injectCSS from './injectCSS';
 import lang from './lang';
 import config from '../config';
+import registerShortcut from '../globalShortcut';
+
+registerShortcut();
 
 const initTranslatePage = () => {
   const i18n = lang();
@@ -26,16 +28,7 @@ const initTranslatePage = () => {
     sourceTextHistory.addValueToHistory(arg);
   });
 
-  const exitApp = frequency(() => remote.app.quit());
   window.addEventListener('keydown', (e) => {
-    // command + shift + w
-    if (e.keyCode === 87 && e.shiftKey && (e.metaKey || e.ctrlKey)) {
-      exitApp();
-    }
-    // esc
-    if (e.keyCode === 27) {
-      ipcRenderer.send('hideWindow');
-    }
     // enter
     if (e.keyCode === 13 && document.activeElement !== sourceTextArea) {
       sourceTextArea.focus();
