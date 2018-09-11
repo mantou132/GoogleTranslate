@@ -5,6 +5,8 @@ import {
   clipboard,
   globalShortcut,
   IpcMessageEvent,
+  Menu,
+  MenuItem,
 } from 'electron';
 import { format as formatUrl } from 'url';
 import path from 'path';
@@ -66,6 +68,17 @@ function createMainWindow() {
   const { webContents } = window;
 
   if (!isDevelopment) {
+    const menu = new Menu();
+    // 加了菜单才有 cmd + shift + i 的功能
+    menu.append(
+      new MenuItem({
+        role: 'about',
+        submenu: [{ role: 'toggledevtools' }],
+      }),
+    );
+    // 加了菜单才有 cmd + c 的功能
+    menu.append(new MenuItem({ role: 'editMenu' }));
+    Menu.setApplicationMenu(menu);
     createProtocol('app');
   }
 

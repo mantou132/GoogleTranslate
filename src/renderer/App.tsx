@@ -4,10 +4,6 @@ import Comopnent from 'vue-class-component';
 import styled from 'vue-emotion';
 
 import config from './config';
-import registerShortcut from './globalShortcut';
-import './globalCSS';
-
-registerShortcut();
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
