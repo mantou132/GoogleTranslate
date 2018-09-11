@@ -2,10 +2,9 @@ import {
   app,
   protocol,
   ipcMain,
-  Menu,
-  MenuItem,
   clipboard,
   globalShortcut,
+  IpcMessageEvent,
 } from 'electron';
 import { format as formatUrl } from 'url';
 import path from 'path';
@@ -16,7 +15,7 @@ import {
   createProtocol,
   installVueDevtools,
 } from 'vue-cli-plugin-electron-builder/lib';
-import menubar from './lib/menubar';
+import menubar from 'menubar';
 import checkForUpdates from './checkForUpdates';
 import { initIpcService } from './nativeMessage';
 
@@ -32,7 +31,7 @@ if (!isDevelopment) {
 }
 
 // global reference to mainWindow (necessary to prevent window from being garbage collected)
-let mainWindow;
+let mainWindow: Menubar.MenubarApp | null;
 
 function createMainWindow() {
   // https://electronjs.org/docs/api/browser-window
@@ -133,31 +132,33 @@ app.on('ready', async () => {
     } else {
       // Check for updates
       checkForUpdates(); // do not await
-      ipcMain.on('check-for-updates', async (event) => {
+      ipcMain.on('check-for-updates', async (event: IpcMessageEvent) => {
         event.sender.send('check-for-updates', await checkForUpdates());
       });
     }
-  } finally {
-    mainWindow = createMainWindow();
-    initIpcService(mainWindow, isDevelopment);
-    globalShortcut.register('CommandOrControl+Q', async () => {
-      const { window } = mainWindow;
-      if (window.isVisible()) {
-        mainWindow.hideWindow();
-      } else {
-        const oldString = clipboard.readText();
-        clipboard.writeText(''); // clear clipboard text
-        robotjs.keyTap('c', 'command'); // Invalid when no selection text
-        await new Promise(resolve => setTimeout(resolve, 300));
-        const newString = clipboard.readText();
-        const trimStr = newString.trim();
-        const originStr = /^[a-zA-Z_-]+$/.test(trimStr)
-          ? startCase(trimStr)
-          : trimStr;
-        clipboard.writeText(oldString);
-        mainWindow.showWindow();
-        window.webContents.send('translate-clipboard-text', originStr);
-      }
-    });
+  } catch (e) {
+    //
   }
+  mainWindow = createMainWindow();
+  initIpcService(mainWindow, isDevelopment);
+  globalShortcut.register('CommandOrControl+Q', async () => {
+    if (!mainWindow) return;
+    const { window } = mainWindow;
+    if (window.isVisible()) {
+      mainWindow.hideWindow();
+    } else {
+      const oldString = clipboard.readText();
+      clipboard.writeText(''); // clear clipboard text
+      robotjs.keyTap('c', 'command'); // Invalid when no selection text
+      await new Promise(resolve => setTimeout(resolve, 300));
+      const newString = clipboard.readText();
+      const trimStr = newString.trim();
+      const originStr = /^[a-zA-Z_-]+$/.test(trimStr)
+        ? startCase(trimStr)
+        : trimStr;
+      clipboard.writeText(oldString);
+      mainWindow.showWindow();
+      window.webContents.send('translate-clipboard-text', originStr);
+    }
+  });
 });

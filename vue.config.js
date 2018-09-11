@@ -1,4 +1,5 @@
 /* eslint-disable global-require */
+const fs = require('fs');
 const WriteFilePlugin = require('write-file-webpack-plugin');
 
 module.exports = {
@@ -17,10 +18,21 @@ module.exports = {
   },
   pluginOptions: {
     electronBuilder: {
+      chainWebpackMainProcess: (config) => {
+        config.module
+          .rule('javascript/auto')
+          .test(/\.mjs$/)
+          .type('javascript/auto');
+
+        return config;
+      },
       outputDir: 'build',
-      mainProcessFile: 'src/main/index.js',
-      mainProcessWatch: ['src/main/lib/menubar/index.js'],
-      disableMainProcessTypescript: true,
+      mainProcessFile: 'src/main/index.ts',
+      mainProcessWatch: fs
+        .readdirSync('src/main')
+        .map(filename => `src/main/${filename}`),
+      disableMainProcessTypescript: false,
+      mainProcessTypeChecking: false,
       builderOptions: {
         productName: 'Google 翻译',
         appId: 'org.moefe.googletranslate',
