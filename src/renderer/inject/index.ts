@@ -35,23 +35,23 @@ const initTranslatePage = () => {
       e.preventDefault();
     }
     // command + 1
-    if (e.keyCode === 49 && (e.metaKey || e.ctrlKey)) {
+    if (e.keyCode === 49 && !e.altKey && (e.metaKey || e.ctrlKey)) {
       if (sourceTextArea.value) {
         sourceTTS.click();
       }
     }
     // command + 2
-    if (e.keyCode === 50 && (e.metaKey || e.ctrlKey)) {
+    if (e.keyCode === 50 && !e.altKey && (e.metaKey || e.ctrlKey)) {
       if (sourceTextArea.value) {
         responseTTS.click();
       }
     }
     // command + i
-    if (e.keyCode === 73 && (e.metaKey || e.ctrlKey)) {
+    if (e.keyCode === 73 && !e.altKey && (e.metaKey || e.ctrlKey)) {
       signIn.click();
     }
     // command + o
-    if (e.keyCode === 79 && (e.metaKey || e.ctrlKey)) {
+    if (e.keyCode === 79 && !e.altKey && (e.metaKey || e.ctrlKey)) {
       signOut.click();
     }
   });

@@ -1,13 +1,14 @@
+import startCase from 'lodash/startCase';
 import { throttle } from './util';
 
-export default function (arg: any) {
+export default function (arg: HTMLTextAreaElement) {
   let isComposition = false;
   const valueHistory = {
     currentPosition: 0,
     historyValuePool: [''],
   };
   const textarea = arg;
-  function handleComposition(e: CompositionEvent) {
+  function handleComposition(e: Event) {
     isComposition = e.type !== 'compositionend';
   }
 
@@ -70,5 +71,27 @@ export default function (arg: any) {
       undo();
     }
   });
+  textarea.addEventListener('paste', (e: ClipboardEvent) => {
+    const isSelectionAll =
+      !textarea.selectionStart &&
+      textarea.selectionEnd === textarea.value.length;
+    if (!textarea.value.trim() || isSelectionAll) {
+      // Prevent the default pasting event and stop bubbling
+      e.preventDefault();
+      e.stopPropagation();
+
+      // Get the clipboard data
+      const newString = e.clipboardData.getData('text');
+      if (!newString) return;
+
+      const trimStr = newString.trim();
+      const originStr = /^[a-zA-Z_-]+$/.test(trimStr)
+        ? startCase(trimStr)
+        : trimStr;
+      textarea.value = originStr;
+      addValueToHistory(originStr);
+    }
+  });
+
   return { addValueToHistory };
 }
