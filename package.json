@@ -7,7 +7,7 @@
     "serve": "vue-cli-service serve:electron",
     "serve:debug": "vue-cli-service serve:electron --debug",
     "build": "vue-cli-service build:electron",
-    "build:extensionapp": "pkg -t host ./src/extensionapp/extensionapp.js --out-path ./src/extensionapp/",
+    "build:extapp": "tsc -p ./src/extapp/tsconfig.json && pkg -t host ./build/extapp/index.js --out-path ./src/extapp",
     "rebuild": "npm rebuild --update-binary && electron-rebuild",
     "lint": "vue-cli-service lint",
     "lint:prettier": "prettier-eslint-check \"**/*.{js,jsx,json,ts,tsx,scss,vue,md}\"",
@@ -54,7 +54,7 @@
     "electron-rebuild": "^1.8.2",
     "emotion": "^9.2.8",
     "lint-staged": "^7.2.2",
-    "pkg": "^4.3.4",
+    "pkg": "4.3.1",
     "prettier": "^1.14.2",
     "prettier-eslint-check": "^1.0.1",
     "prettier-eslint-cli": "^4.7.1",
@@ -64,6 +64,7 @@
     "vue-jsx-hot-loader": "^1.4.0",
     "vue-template-compiler": "^2.5.17",
     "vue-tsx-support": "^2.1.1",
+    "web-ext-native-msg": "^3.1.1",
     "write-file-webpack-plugin": "^4.4.0"
   },
   "browserslist": [

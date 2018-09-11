@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "outDir": "../../build/extapp",
+    "skipLibCheck": true,
+    "target": "es6",
+    "module": "commonjs",
+    "strict": true,
+    "importHelpers": true,
+    "moduleResolution": "node",
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "sourceMap": true,
+    "baseUrl": ".",
+    "types": ["node"]
+  },
+  "include": ["*.ts", "../../types/web-ext-native-msg.d.ts"]
+}

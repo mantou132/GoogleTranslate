@@ -10,8 +10,8 @@ export function installNativeMessageManifest(isDevelopment: boolean) {
     name: 'google_translate',
     description: '谷歌翻译',
     path: isDevelopment
-      ? `${process.cwd()}/src/extensionapp/extensionapp`
-      : `${process.resourcesPath}/extensionapp`,
+      ? `${process.cwd()}/src/extapp/index`
+      : `${process.resourcesPath}/extapp`,
     type: 'stdio',
     allowed_extensions: ['{fa233117-785b-4da4-a4a2-6f5312c6381b}'],
   };
