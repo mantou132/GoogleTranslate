@@ -46,16 +46,14 @@ export default class App extends Vue {
 
   mounted() {
     const { webview } = this.$refs;
-    if (isDevelopment) {
-      webview.addEventListener('dom-ready', () => {
-        webview.openDevTools();
-      });
-    }
-    webview.addEventListener('devtools-opened', () => {
-      remote.getCurrentWindow().setAlwaysOnTop(true);
+    window.addEventListener('focus', () => {
+      webview.focus();
     });
-    webview.addEventListener('devtools-closed', () => {
-      remote.getCurrentWindow().setAlwaysOnTop(false);
+    webview.addEventListener('dom-ready', () => {
+      if (isDevelopment) {
+        webview.openDevTools();
+      }
+      webview.focus();
     });
     webview.addEventListener('new-window', (e) => {
       webview.loadURL(e.url);
@@ -75,9 +73,6 @@ export default class App extends Vue {
       if (arg) {
         webview.send('translate-clipboard-text', arg);
       }
-    });
-    window.addEventListener('focus', () => {
-      webview.focus();
     });
   }
 
