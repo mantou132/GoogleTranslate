@@ -1,7 +1,7 @@
 import startCase from 'lodash/startCase';
 import { throttle } from './util';
 
-export default function (arg: HTMLTextAreaElement) {
+export default function (arg: HTMLTextAreaElement, submit?: string) {
   let isComposition = false;
   const valueHistory = {
     currentPosition: 0,
@@ -22,6 +22,10 @@ export default function (arg: HTMLTextAreaElement) {
       valueHistory.historyValuePool.length = valueHistory.currentPosition + 1;
       valueHistory.historyValuePool.push(text);
       valueHistory.currentPosition += 1;
+      if (submit) {
+        const submitEle = document.querySelector(submit) as HTMLElement | null;
+        if (submitEle) submitEle.click();
+      }
     }
   }
 

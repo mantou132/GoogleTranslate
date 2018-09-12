@@ -39,7 +39,11 @@ const WebView = styled.webview`
 
 @Comopnent
 export default class App extends Vue {
-  color = 'white';
+  private color = 'white';
+  private src = config.translateUrl;
+  private preload = isDevelopment
+    ? `file://${process.cwd()}/build/dev/inject.js`
+    : `file://${__dirname}/js/inject.js`;
   public readonly $refs!: {
     webview: WebviewTag;
   };
@@ -69,6 +73,12 @@ export default class App extends Vue {
         }
       },
     );
+    new Promise((resolve, reject) => {
+      webview.addEventListener('did-finish-load', resolve);
+      setTimeout(reject, 3000);
+    }).catch(() => {
+      this.src = config.translateUrlFallback;
+    });
     ipcRenderer.on('translate-clipboard-text', async (e: Event, arg: any) => {
       if (arg) {
         webview.send('translate-clipboard-text', arg);
@@ -77,21 +87,17 @@ export default class App extends Vue {
   }
 
   render() {
-    const { color } = this;
+    const { color, src, preload } = this;
     return (
       <Wrap color={color}>
         <Page>
           <WebView
             tabIndex="0"
             ref="webview"
-            preload={
-              isDevelopment
-                ? `file://${process.cwd()}/build/dev/inject.js`
-                : `file://${__dirname}/js/inject.js`
-            }
+            preload={preload}
             allowpopups
             useragent="Mozilla/5.0 (Linux; Android 7.1.1; E5823) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.2 Mobile Safari/537.36"
-            src={config.translateUrl}
+            src={src}
           />
         </Page>
       </Wrap>

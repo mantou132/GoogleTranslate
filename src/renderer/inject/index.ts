@@ -3,115 +3,157 @@ import textBoxHistory from './textboxhistory';
 import injectCSS from './injectCSS';
 import lang from './lang';
 import config from '../config';
-import registerShortcut from '../globalShortcut';
 
-registerShortcut();
+interface IInitPageOption {
+  sourceTextArea: string;
+  responseContainer: string;
+  sourceTTS: string;
+  responseTTS: string;
+  responseCopy: string;
+  signIn: string;
+  signOut: string;
 
-const initTranslatePage = () => {
-  const i18n = lang();
-  const sourceTextArea = document.querySelector(
-    '#source',
+  submit?: string;
+  sourceLabel?: string;
+  targetLabel?: string;
+  enLabel?: string;
+  zhLabel?: string;
+}
+
+const initTranslatePage = async (opt: IInitPageOption) => {
+  await new Promise((resolve) => {
+    window.addEventListener('load', resolve);
+  });
+
+  const sourceTextAreaEle = document.querySelector(
+    opt.sourceTextArea,
   ) as HTMLTextAreaElement;
-  const responseContainer = document.querySelector(
-    '.tlid-translation',
-  ) as HTMLSpanElement;
-  const sourceTTS = document.querySelector('.src-tts') as HTMLDivElement;
-  const responseTTS = document.querySelector('.res-tts') as HTMLDivElement;
-  const responseCopy = document.querySelector('.copybutton') as HTMLDivElement;
-  const signIn = document.querySelector('.gb_Aa.gb_Fb') as HTMLAnchorElement;
-  const signOut = document.querySelector('#gb_71') as HTMLAnchorElement;
-
-  const sourceTextHistory = textBoxHistory(sourceTextArea);
-
-  sourceTextArea.focus();
-
-  ipcRenderer.on('translate-clipboard-text', (event: any, arg: string) => {
-    sourceTextArea.focus();
+  sourceTextAreaEle.focus();
+  const sourceTextHistory = textBoxHistory(sourceTextAreaEle, opt.submit);
+  ipcRenderer.on('translate-clipboard-text', (_: any, arg: string) => {
+    sourceTextAreaEle.focus();
     if (!arg) return; // 没有选择的文本
-    sourceTextArea.value = arg;
+    sourceTextAreaEle.value = arg;
     sourceTextHistory.addValueToHistory(arg);
   });
 
   window.addEventListener('keydown', (e) => {
     // enter
-    if (e.keyCode === 13 && document.activeElement !== sourceTextArea) {
-      sourceTextArea.focus();
+    if (e.keyCode === 13 && document.activeElement !== sourceTextAreaEle) {
+      sourceTextAreaEle.focus();
       e.preventDefault();
     }
     // command + 1
     if (e.keyCode === 49 && !e.altKey && (e.metaKey || e.ctrlKey)) {
-      if (sourceTextArea.value) {
-        sourceTTS.dispatchEvent(new MouseEvent('mousedown'));
-        sourceTTS.dispatchEvent(new MouseEvent('mouseup'));
+      const sourceTTSEle = document.querySelector(
+        opt.sourceTTS,
+      ) as HTMLElement | null;
+      if (sourceTTSEle && sourceTextAreaEle.value) {
+        sourceTTSEle.dispatchEvent(new MouseEvent('mousedown'));
+        sourceTTSEle.dispatchEvent(new MouseEvent('mouseup'));
+        sourceTTSEle.click();
       }
     }
     // command + 2
     if (e.keyCode === 50 && !e.altKey && (e.metaKey || e.ctrlKey)) {
-      if (sourceTextArea.value) {
-        responseTTS.dispatchEvent(new MouseEvent('mousedown'));
-        responseTTS.dispatchEvent(new MouseEvent('mouseup'));
+      const responseTTSEle = document.querySelector(
+        opt.responseTTS,
+      ) as HTMLElement | null;
+      if (responseTTSEle && sourceTextAreaEle.value) {
+        responseTTSEle.dispatchEvent(new MouseEvent('mousedown'));
+        responseTTSEle.dispatchEvent(new MouseEvent('mouseup'));
+        responseTTSEle.click();
       }
     }
     // command + 3
     if (e.keyCode === 51 && !e.altKey && (e.metaKey || e.ctrlKey)) {
-      const response = responseContainer.textContent!.trim();
-      if (response) {
+      const responseContainerEle = document.querySelector(
+        opt.responseContainer,
+      );
+      const responseCopyEle = document.querySelector(
+        opt.responseCopy,
+      ) as HTMLElement | null;
+      const response =
+        responseContainerEle && responseContainerEle.textContent!.trim();
+      if (response && responseCopyEle) {
         clipboard.writeText(response);
-        responseCopy.dispatchEvent(new MouseEvent('mousedown'));
-        responseCopy.dispatchEvent(new MouseEvent('mouseup'));
+        responseCopyEle.dispatchEvent(new MouseEvent('mousedown'));
+        responseCopyEle.dispatchEvent(new MouseEvent('mouseup'));
+        responseCopyEle.click();
       }
     }
     // command + i
     if (e.keyCode === 73 && !e.altKey && (e.metaKey || e.ctrlKey)) {
-      signIn.click();
+      const signInEle = document.querySelector(opt.signIn) as HTMLElement;
+      signInEle.click();
     }
     // command + o
     if (e.keyCode === 79 && !e.altKey && (e.metaKey || e.ctrlKey)) {
-      signOut.click();
+      const signOutEle = document.querySelector(opt.signOut) as HTMLElement;
+      signOutEle.click();
     }
   });
 
-  const sourceLabel = document.querySelector(
-    '.tlid-open-small-source-language-list',
-  ) as HTMLDivElement;
-  const targetLabel = document.querySelector(
-    '.tlid-open-small-target-language-list',
-  ) as HTMLDivElement;
-  const enLabel = document.querySelector(
-    '[onclick*=tl_list_en]',
-  ) as HTMLDivElement;
-  const zhLabel = document.querySelector(
-    '[onclick*=tl_list_zh-CN]',
-  ) as HTMLDivElement;
-  const observer = new MutationObserver(() => {
-    const sourceMatch = sourceLabel.textContent!.match(i18n.detechReg);
-    const sourceStr = sourceMatch ? sourceMatch[1] : '';
-    const targetStr = targetLabel.textContent;
-    if (sourceStr && targetStr!.includes(sourceStr)) {
-      if (sourceStr === i18n.detechZh) {
-        enLabel.click();
-      } else {
-        zhLabel.click();
+  if (opt.sourceLabel && opt.targetLabel && opt.enLabel && opt.zhLabel) {
+    const i18n = lang();
+    const sourceLabelEle = document.querySelector(
+      opt.sourceLabel,
+    ) as HTMLElement;
+    const targetLabelEle = document.querySelector(
+      opt.targetLabel,
+    ) as HTMLElement;
+    const enLabelEle = document.querySelector(opt.enLabel) as HTMLElement;
+    const zhLabelEle = document.querySelector(opt.zhLabel) as HTMLElement;
+    const observer = new MutationObserver(() => {
+      const sourceMatch = sourceLabelEle.textContent!.match(i18n.detechReg);
+      const sourceStr = sourceMatch ? sourceMatch[1] : '';
+      const targetStr = targetLabelEle.textContent;
+      if (sourceStr && targetStr!.includes(sourceStr)) {
+        if (sourceStr === i18n.detechZh) {
+          enLabelEle.click();
+        } else {
+          zhLabelEle.click();
+        }
       }
-    }
-  });
-  observer.observe(sourceLabel, {
-    attributes: false,
-    childList: true,
-    subtree: false,
-  });
+    });
+    observer.observe(sourceLabelEle, {
+      attributes: false,
+      childList: true,
+      subtree: false,
+    });
+  }
 };
 
-if (window.location.href.startsWith(config.translateUrl)) {
-  ipcRenderer.sendToHost('header-background-change', 'white');
-  window.addEventListener('DOMContentLoaded', injectCSS);
-  window.addEventListener('load', initTranslatePage);
-} else {
-  ipcRenderer.sendToHost('header-background-change', '#4285f4');
-  window.addEventListener('keydown', (e) => {
-    // command + back
-    if (e.keyCode === 8 && (e.metaKey || e.ctrlKey)) {
-      window.location.href = config.translateUrl;
-    }
+const { href } = window.location;
+if (href.startsWith(config.translateUrl)) {
+  injectCSS('google');
+  initTranslatePage({
+    sourceTextArea: '#source',
+    responseContainer: '.tlid-translation',
+    sourceTTS: '.src-tts',
+    responseTTS: '.res-tts',
+    responseCopy: '.copybutton',
+    signIn: '.gb_Aa.gb_Fb',
+    signOut: '#gb_71',
+    sourceLabel: '.tlid-open-small-source-language-list',
+    targetLabel: '.tlid-open-small-target-language-list',
+    enLabel: '[onclick*=tl_list_en]',
+    zhLabel: '[onclick*=tl_list_zh-CN]',
   });
+  ipcRenderer.sendToHost('header-background-change', 'white');
+} else if (href.startsWith(config.translateUrlFallback)) {
+  injectCSS('baidu');
+  initTranslatePage({
+    sourceTextArea: '#j-textarea',
+    submit: '.trans-btn',
+    responseContainer: '.trans-content',
+    sourceTTS: '#single-sound .horn',
+    responseTTS: '.concise-trans .horn',
+    responseCopy: '.copy-btn',
+    signIn: '#login-btn',
+    signOut: '.go-to-logout',
+  });
+  ipcRenderer.sendToHost('header-background-change', 'white');
+} else {
+  ipcRenderer.sendToHost('header-background-change', 'transparent');
 }
