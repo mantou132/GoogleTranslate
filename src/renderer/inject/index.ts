@@ -37,13 +37,15 @@ const initTranslatePage = () => {
     // command + 1
     if (e.keyCode === 49 && !e.altKey && (e.metaKey || e.ctrlKey)) {
       if (sourceTextArea.value) {
-        sourceTTS.click();
+        sourceTTS.dispatchEvent(new MouseEvent('mousedown'));
+        sourceTTS.dispatchEvent(new MouseEvent('mouseup'));
       }
     }
     // command + 2
     if (e.keyCode === 50 && !e.altKey && (e.metaKey || e.ctrlKey)) {
       if (sourceTextArea.value) {
-        responseTTS.click();
+        responseTTS.dispatchEvent(new MouseEvent('mousedown'));
+        responseTTS.dispatchEvent(new MouseEvent('mouseup'));
       }
     }
     // command + i
