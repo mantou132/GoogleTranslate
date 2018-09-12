@@ -14,7 +14,7 @@ export default function () {
     }
     // esc
     if (e.keyCode === 27) {
-      ipcRenderer.send('hideWindow');
+      ipcRenderer.send('hide-window');
     }
   });
 }

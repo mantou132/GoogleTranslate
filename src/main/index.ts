@@ -82,11 +82,11 @@ function createMainWindow() {
     createProtocol('app');
   }
 
-  ipcMain.on('showWindow', () => {
+  ipcMain.on('show-window', () => {
     mb.showWindow();
   });
 
-  ipcMain.on('hideWindow', () => {
+  ipcMain.on('hide-window', () => {
     mb.hideWindow();
   });
 
