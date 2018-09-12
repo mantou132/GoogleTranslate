@@ -30,6 +30,7 @@ module.exports = {
       mainProcessFile: 'src/main/index.ts',
       mainProcessWatch: fs
         .readdirSync('src/main')
+        .filter(file => file !== 'index.ts')
         .map(filename => `src/main/${filename}`),
       disableMainProcessTypescript: false,
       mainProcessTypeChecking: false,
