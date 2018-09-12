@@ -23,6 +23,8 @@ import { initIpcService } from './nativeMessage';
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
+process.env.GOOGLE_API_KEY = 'AIzaSyB0X6iZUJXzdqBK-3TOzKIx6p14J2Eb4OU';
+
 if (!isDevelopment) {
   const googleTranslateAutoLaunch = new AutoLaunch({ name: 'Google 翻译' });
   googleTranslateAutoLaunch.isEnabled().then((isEnabled) => {
