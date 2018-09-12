@@ -1,4 +1,4 @@
-import { ipcRenderer } from 'electron';
+import { ipcRenderer, clipboard } from 'electron';
 import textBoxHistory from './textboxhistory';
 import injectCSS from './injectCSS';
 import lang from './lang';
@@ -12,8 +12,12 @@ const initTranslatePage = () => {
   const sourceTextArea = document.querySelector(
     '#source',
   ) as HTMLTextAreaElement;
+  const responseContainer = document.querySelector(
+    '.tlid-translation',
+  ) as HTMLSpanElement;
   const sourceTTS = document.querySelector('.src-tts') as HTMLDivElement;
   const responseTTS = document.querySelector('.res-tts') as HTMLDivElement;
+  const responseCopy = document.querySelector('.copybutton') as HTMLDivElement;
   const signIn = document.querySelector('.gb_Aa.gb_Fb') as HTMLAnchorElement;
   const signOut = document.querySelector('#gb_71') as HTMLAnchorElement;
 
@@ -48,6 +52,15 @@ const initTranslatePage = () => {
         responseTTS.dispatchEvent(new MouseEvent('mouseup'));
       }
     }
+    // command + 3
+    if (e.keyCode === 51 && !e.altKey && (e.metaKey || e.ctrlKey)) {
+      const response = responseContainer.textContent!.trim();
+      if (response) {
+        clipboard.writeText(response);
+        responseCopy.dispatchEvent(new MouseEvent('mousedown'));
+        responseCopy.dispatchEvent(new MouseEvent('mouseup'));
+      }
+    }
     // command + i
     if (e.keyCode === 73 && !e.altKey && (e.metaKey || e.ctrlKey)) {
       signIn.click();
@@ -71,10 +84,10 @@ const initTranslatePage = () => {
     '[onclick*=tl_list_zh-CN]',
   ) as HTMLDivElement;
   const observer = new MutationObserver(() => {
-    const sourceMatch = (sourceLabel.textContent || '').match(i18n.detechReg);
+    const sourceMatch = sourceLabel.textContent!.match(i18n.detechReg);
     const sourceStr = sourceMatch ? sourceMatch[1] : '';
-    const targetStr = targetLabel.textContent || '';
-    if (sourceStr && targetStr.includes(sourceStr)) {
+    const targetStr = targetLabel.textContent;
+    if (sourceStr && targetStr!.includes(sourceStr)) {
       if (sourceStr === i18n.detechZh) {
         enLabel.click();
       } else {
