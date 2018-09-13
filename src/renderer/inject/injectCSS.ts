@@ -8,6 +8,12 @@ export default async (type = 'google') => {
   if (type === 'google') {
     // eslint-disable-next-line no-unused-expressions
     injectGlobal`
+      header {
+        margin-top: -1px !important;
+        height: 0 !important;
+        overflow: hidden !important;
+        padding: 0 !important;
+      }
       #source {
         max-height: none !important;
         padding-right: 50px !important;
@@ -22,12 +28,6 @@ export default async (type = 'google') => {
       }
       :focus {
         outline: none !important;
-      }
-      .gb_Dd {
-        margin-top: -1px !important;
-        height: 0 !important;
-        overflow: hidden !important;
-        padding: 0 !important;
       }
       .frame {
         height: 100vh !important;
