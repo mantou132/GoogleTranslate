@@ -52,6 +52,20 @@ export default function (arg: HTMLTextAreaElement, submit?: string) {
     }
   }
   const throttleAddValueToHistory = throttle(addValueToHistory, 1000);
+
+  const textareaProtoProp = Object.getOwnPropertyDescriptor(
+    HTMLTextAreaElement.prototype,
+    'value',
+  );
+  Object.defineProperty(textarea, 'value', {
+    ...textareaProtoProp,
+    set(v) {
+      const value = String(v);
+      throttleAddValueToHistory(value);
+      return textareaProtoProp!.set!.apply(this, [value]);
+    },
+  });
+
   textarea.addEventListener('input', () => {
     throttleAddValueToHistory(textarea.value);
   });
@@ -96,6 +110,4 @@ export default function (arg: HTMLTextAreaElement, submit?: string) {
       addValueToHistory(originStr);
     }
   });
-
-  return { addValueToHistory };
 }

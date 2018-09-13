@@ -29,12 +29,11 @@ const initTranslatePage = async (opt: IInitPageOption) => {
     opt.sourceTextArea,
   ) as HTMLTextAreaElement;
   sourceTextAreaEle.focus();
-  const sourceTextHistory = textBoxHistory(sourceTextAreaEle, opt.submit);
+  textBoxHistory(sourceTextAreaEle, opt.submit);
   ipcRenderer.on('translate-clipboard-text', (_: any, arg: string) => {
     sourceTextAreaEle.focus();
     if (!arg) return; // 没有选择的文本
     sourceTextAreaEle.value = arg;
-    sourceTextHistory.addValueToHistory(arg);
   });
 
   window.addEventListener('keydown', (e) => {
