@@ -3,9 +3,9 @@ import path from 'path';
 import fs from 'fs';
 import mkdirp from 'mkdirp';
 import ipc from 'node-ipc';
-import startCase from 'lodash/startCase';
 import { dialog } from 'electron';
 import { promisify } from 'util';
+import { getTranslateString } from '../util';
 
 export function installNativeMessageManifest(isDevelopment: boolean) {
   const manifest = {
@@ -76,11 +76,9 @@ export function initIpcService(
   ipc.serve(() =>
     ipc.server.on('translate-text', (message) => {
       const { window } = mainWindow;
-      const trimStr = message.trim();
-      const originStr = /^[a-zA-Z_-]+$/.test(trimStr)
-        ? startCase(trimStr)
-        : trimStr;
       mainWindow.showWindow();
+
+      const originStr = getTranslateString(message);
       window.webContents.send('translate-clipboard-text', originStr);
     }),
   );

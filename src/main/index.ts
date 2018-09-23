@@ -12,7 +12,6 @@ import { format as formatUrl } from 'url';
 import path from 'path';
 import robotjs from 'robotjs';
 import AutoLaunch from 'auto-launch';
-import startCase from 'lodash/startCase';
 import {
   createProtocol,
   installVueDevtools,
@@ -20,6 +19,7 @@ import {
 import menubar from 'menubar';
 import checkForUpdates from './checkForUpdates';
 import { initIpcService } from './nativeMessage';
+import { getTranslateString } from '../util';
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
@@ -166,13 +166,13 @@ app.on('ready', async () => {
       clipboard.writeText(''); // clear clipboard text
       robotjs.keyTap('c', 'command'); // Invalid when no selection text
       await new Promise(resolve => setTimeout(resolve, 300));
+
       const newString = clipboard.readText();
-      const trimStr = newString.trim();
-      const originStr = /^[a-zA-Z_-]+$/.test(trimStr)
-        ? startCase(trimStr)
-        : trimStr;
+      const originStr = getTranslateString(newString);
+
       clipboard.writeText(oldString);
       mainWindow.showWindow();
+
       window.webContents.send('translate-clipboard-text', originStr);
     }
   });

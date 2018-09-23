@@ -1,5 +1,5 @@
-import startCase from 'lodash/startCase';
 import { throttle } from './util';
+import { getTranslateString } from '../../util';
 
 export default function (arg: HTMLTextAreaElement, submit?: string) {
   let isComposition = false;
@@ -102,10 +102,7 @@ export default function (arg: HTMLTextAreaElement, submit?: string) {
       const newString = e.clipboardData.getData('text');
       if (!newString) return;
 
-      const trimStr = newString.trim();
-      const originStr = /^[a-zA-Z_-]+$/.test(trimStr)
-        ? startCase(trimStr)
-        : trimStr;
+      const originStr = getTranslateString(newString);
       textarea.value = originStr;
       addValueToHistory(originStr);
     }
