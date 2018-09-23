@@ -74,7 +74,7 @@ export default class App extends Vue {
       },
     );
     new Promise((resolve, reject) => {
-      webview.addEventListener('did-finish-load', resolve);
+      webview.addEventListener('dom-ready', resolve);
       setTimeout(reject, 3000);
     }).catch(() => {
       this.src = config.translateUrlFallback;
