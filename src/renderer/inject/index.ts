@@ -2,6 +2,7 @@ import { ipcRenderer, clipboard } from 'electron';
 import textBoxHistory from './textboxhistory';
 import injectCSS from './injectCSS';
 import lang from './lang';
+import { click } from './util';
 import config from '../config';
 
 interface IInitPageOption {
@@ -18,6 +19,7 @@ interface IInitPageOption {
   targetLabel?: string;
   enLabel?: string;
   zhLabel?: string;
+  starButton?: string;
 }
 
 const initTranslatePage = async (opt: IInitPageOption) => {
@@ -48,9 +50,7 @@ const initTranslatePage = async (opt: IInitPageOption) => {
         opt.sourceTTS,
       ) as HTMLElement | null;
       if (sourceTTSEle && sourceTextAreaEle.value) {
-        sourceTTSEle.dispatchEvent(new MouseEvent('mousedown'));
-        sourceTTSEle.dispatchEvent(new MouseEvent('mouseup'));
-        sourceTTSEle.click();
+        click(sourceTTSEle);
       }
     }
     // command + 2
@@ -59,9 +59,7 @@ const initTranslatePage = async (opt: IInitPageOption) => {
         opt.responseTTS,
       ) as HTMLElement | null;
       if (responseTTSEle && sourceTextAreaEle.value) {
-        responseTTSEle.dispatchEvent(new MouseEvent('mousedown'));
-        responseTTSEle.dispatchEvent(new MouseEvent('mouseup'));
-        responseTTSEle.click();
+        click(responseTTSEle);
       }
     }
     // command + 3
@@ -76,9 +74,16 @@ const initTranslatePage = async (opt: IInitPageOption) => {
         responseContainerEle && responseContainerEle.textContent!.trim();
       if (response && responseCopyEle) {
         clipboard.writeText(response);
-        responseCopyEle.dispatchEvent(new MouseEvent('mousedown'));
-        responseCopyEle.dispatchEvent(new MouseEvent('mouseup'));
-        responseCopyEle.click();
+        click(responseCopyEle);
+      }
+    }
+    // command + s
+    if (e.keyCode === 83 && !e.altKey && (e.metaKey || e.ctrlKey)) {
+      const starButtonEle =
+        opt.starButton &&
+        (document.querySelector(opt.starButton) as HTMLElement | null);
+      if (starButtonEle) {
+        click(starButtonEle);
       }
     }
     // command + i
@@ -132,6 +137,7 @@ if (href.startsWith(config.translateUrl)) {
     sourceTTS: '.src-tts',
     responseTTS: '.res-tts',
     responseCopy: '.copybutton',
+    starButton: '.starbutton',
     signIn: '.gb_Aa.gb_Fb',
     signOut: '#gb_71',
     sourceLabel: '.tlid-open-small-source-language-list',

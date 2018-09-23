@@ -24,6 +24,7 @@
   <kbd>command</kbd> + <kbd>1</kbd> - 朗读源文本<br>
   <kbd>command</kbd> + <kbd>2</kbd> - 朗读翻译文本<br>
   <kbd>command</kbd> + <kbd>3</kbd> - 复制翻译文本<br>
+  <kbd>command</kbd> + <kbd>s</kbd> - 保存/撤销保存翻译<br>
   <kbd>command</kbd> + <kbd>i</kbd> - 登陆 Google 账号<br>
   <kbd>command</kbd> + <kbd>o</kbd> - 登出 Google 账号<br>
   <kbd>command</kbd> + <kbd>shift</kbd> + <kbd>w</kbd> 连续按两次 - 退出应用

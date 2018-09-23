@@ -19,3 +19,9 @@ export function frequency(fn: Function, rate = 2) {
     }
   };
 }
+
+export function click(ele: HTMLElement) {
+  ele.dispatchEvent(new MouseEvent('mousedown'));
+  ele.dispatchEvent(new MouseEvent('mouseup'));
+  ele.click();
+}
