@@ -2,7 +2,7 @@ export function throttle(fn: Function, delay = 500) {
   let timer = 0;
   return (...rest: any[]) => {
     clearTimeout(timer);
-    timer = setTimeout(fn.bind(null, ...rest), delay);
+    timer = window.setTimeout(fn.bind(null, ...rest), delay);
   };
 }
 

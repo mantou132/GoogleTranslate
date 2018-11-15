@@ -1,5 +1,5 @@
 export default () => {
-  if (document.documentElement.lang === 'zh-CN') {
+  if ((document.documentElement as HTMLElement).lang === 'zh-CN') {
     return {
       detechReg: /检测到(.*)/,
       detechZh: '中文',
