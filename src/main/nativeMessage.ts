@@ -26,16 +26,16 @@ export function installNativeMessageManifest(isDevelopment: boolean) {
     {
       // https://developer.chrome.com/extensions/nativeMessaging#native-messaging-host
       dir: 'Library/Application Support/Google/Chrome/NativeMessagingHosts',
-      allowed_origins: ['chrome-extension://ahpcfefkldiajhdnnlbbfblhchfbalnf/'],
+      allowed_origins: ['chrome-extension://hjaohjgedndjjaegicnfikppfjbboohf/'],
     },
     {
       dir:
         'Library/Application Support/Google/Chrome Canary/NativeMessagingHosts',
-      allowed_origins: ['chrome-extension://ahpcfefkldiajhdnnlbbfblhchfbalnf/'],
+      allowed_origins: ['chrome-extension://hjaohjgedndjjaegicnfikppfjbboohf/'],
     },
     {
       dir: 'Library/Application Support/Chromium/NativeMessagingHosts',
-      allowed_origins: ['chrome-extension://ahpcfefkldiajhdnnlbbfblhchfbalnf/'],
+      allowed_origins: ['chrome-extension://hjaohjgedndjjaegicnfikppfjbboohf/'],
     },
   ];
 
