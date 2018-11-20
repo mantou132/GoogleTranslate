@@ -40,6 +40,9 @@
 
 ## FAQ
 
+Q：为什么 <kbd>command</kbd> + <kbd>q</kbd> 打开翻译窗口没有自动填充选择的文本？
+A：可能被 OS 禁止了，试试重新为应用授权。如：<a href="./screenshot/Screen Shot 2018-11-21 at 00.57.30.png">图片</a>
+
 Q：Electron 不是跨平台的吗？为什么只有 Mac 版本？
 A：因为 UI 的交互设计不适用于其他操作系统
 
