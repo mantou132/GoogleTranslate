@@ -96,6 +96,7 @@ export default class App extends Vue {
             ref="webview"
             preload={preload}
             allowpopups
+            partition="persist:google"
             useragent="Mozilla/5.0 (Linux; Android 7.1.1; E5823) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.2 Mobile Safari/537.36"
             src={src}
           />
