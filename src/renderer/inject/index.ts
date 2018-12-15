@@ -113,6 +113,7 @@ const initTranslatePage = async (opt: IInitPageOption) => {
       const sourceStr = sourceMatch ? sourceMatch[1] : '';
       const targetStr = targetLabelEle.textContent;
       if (sourceStr && targetStr!.includes(sourceStr)) {
+        targetLabelEle.click();
         if (sourceStr === i18n.detechZh) {
           enLabelEle.click();
         } else {
