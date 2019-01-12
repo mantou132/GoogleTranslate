@@ -31,7 +31,7 @@
 
 ## 预览
 
-<img alt="应用程序主界面" src="./screenshot/Screen Shot 2018-09-10 at 15.03.15.png" width="320">
+<img align="left" alt="应用程序主界面" src="./screenshot/Screen Shot 2018-09-10 at 15.03.15.png" width="320">
 <img alt="应用程序主界面" src="./screenshot/Screen Shot 2018-09-10 at 15.03.51.png" width="320">
 
 ## 下载
@@ -40,16 +40,19 @@
 
 ## FAQ
 
-Q：为什么 <kbd>command</kbd> + <kbd>q</kbd> 打开翻译窗口没有自动填充选择的文本？
+Q：为什么快捷键要使用 <kbd>command</kbd> + <kbd>q</kbd>？<br>
+A：个人习惯，平常会误触导致 App 被关闭
+
+Q：为什么 <kbd>command</kbd> + <kbd>q</kbd> 打开翻译窗口没有自动填充选择的文本？<br>
 A：可能被 OS 禁止了，试试重新为应用授权。如：<a href="./screenshot/Screen Shot 2018-11-21 at 00.57.30.png">图片</a>
 
-Q：Electron 不是跨平台的吗？为什么只有 Mac 版本？
+Q：Electron 不是跨平台的吗？为什么只有 Mac 版本？<br>
 A：因为 UI 的交互设计不适用于其他操作系统
 
-Q：为什么不能自动更新？
+Q：为什么不能自动更新？<br>
 A：因为我没有加入 [Apple Developer Program](https://developer.apple.com/programs/)（需要缴纳年费），无法进行[代码签名](https://electronjs.org/docs/tutorial/code-signing)，所以无法使用自动更新功能
 
-Q：无法打开应用，提示该应用来自身份不明的开发者？
+Q：无法打开应用，提示该应用来自身份不明的开发者？<br>
 A：在终端中输入 `sudo spctl –master-disable` 然后按回车确认，密码是系统开机密码。
 然后打开系统偏好设置 ⇨ 安全性和隐私 ⇨ 任何来源，勾选即可。
 
