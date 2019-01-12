@@ -17,6 +17,7 @@ interface IInitPageOption {
   submit?: string;
   sourceLabel?: string;
   targetLabel?: string;
+  detectLabel?: string;
   enLabel?: string;
   zhLabel?: string;
   starButton?: string;
@@ -98,7 +99,13 @@ const initTranslatePage = async (opt: IInitPageOption) => {
     }
   });
 
-  if (opt.sourceLabel && opt.targetLabel && opt.enLabel && opt.zhLabel) {
+  if (
+    opt.sourceLabel &&
+    opt.targetLabel &&
+    opt.enLabel &&
+    opt.zhLabel &&
+    opt.detectLabel
+  ) {
     const i18n = lang();
     const sourceLabelEle = document.querySelector(
       opt.sourceLabel,
@@ -108,13 +115,22 @@ const initTranslatePage = async (opt: IInitPageOption) => {
     ) as HTMLElement;
     const enLabelEle = document.querySelector(opt.enLabel) as HTMLElement;
     const zhLabelEle = document.querySelector(opt.zhLabel) as HTMLElement;
+    const detectLabelEle = document.querySelector(
+      opt.detectLabel,
+    ) as HTMLElement;
+
+    ipcRenderer.on('translate-clipboard-text', (_: any, arg: string) => {
+      targetLabelEle.click();
+      detectLabelEle.click();
+    });
+
     const observer = new MutationObserver(() => {
-      const sourceMatch = sourceLabelEle.textContent!.match(i18n.detechReg);
+      const sourceMatch = sourceLabelEle.textContent!.match(i18n.detectReg);
       const sourceStr = sourceMatch ? sourceMatch[1] : '';
       const targetStr = targetLabelEle.textContent;
       if (sourceStr && targetStr!.includes(sourceStr)) {
         targetLabelEle.click();
-        if (sourceStr === i18n.detechZh) {
+        if (sourceStr === i18n.detectZh) {
           enLabelEle.click();
         } else {
           zhLabelEle.click();
@@ -143,6 +159,7 @@ if (href.startsWith(config.translateUrl)) {
     signOut: '#gb_71',
     sourceLabel: '.tlid-open-small-source-language-list',
     targetLabel: '.tlid-open-small-target-language-list',
+    detectLabel: '[onclick*=sl_list_auto]',
     enLabel: '[onclick*=tl_list_en]',
     zhLabel: '[onclick*=tl_list_zh-CN]',
   });
