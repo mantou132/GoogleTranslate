@@ -120,8 +120,12 @@ const initTranslatePage = async (opt: IInitPageOption) => {
     ) as HTMLElement;
 
     ipcRenderer.on('translate-clipboard-text', (_: any, arg: string) => {
+      const { value } = sourceTextAreaEle;
+      if (value === arg) return;
+      sourceTextAreaEle.value = '';
       targetLabelEle.click();
       detectLabelEle.click();
+      sourceTextAreaEle.value = value;
     });
 
     const observer = new MutationObserver(() => {
