@@ -146,8 +146,11 @@ const initTranslatePage = async (opt: IInitPageOption) => {
 };
 
 const { href } = window.location;
-if (href.startsWith(config.translateUrl)) {
-  injectCSS('google');
+if (
+  href.startsWith(config.translateUrl) ||
+  href.startsWith(config.translateUrlFallback)
+) {
+  injectCSS();
   initTranslatePage({
     sourceTextArea: '#source',
     responseContainer: '.tlid-translation',
@@ -162,19 +165,6 @@ if (href.startsWith(config.translateUrl)) {
     detectLabel: '[onclick*=sl_list_auto]',
     enLabel: '[onclick*=tl_list_en]',
     zhLabel: '[onclick*=tl_list_zh-CN]',
-  });
-  ipcRenderer.sendToHost('header-background-change', 'white');
-} else if (href.startsWith(config.translateUrlFallback)) {
-  injectCSS('baidu');
-  initTranslatePage({
-    sourceTextArea: '#j-textarea',
-    submit: '.trans-btn',
-    responseContainer: '.trans-content',
-    sourceTTS: '#single-sound .horn',
-    responseTTS: '.concise-trans .horn',
-    responseCopy: '.copy-btn',
-    signIn: '#login-btn',
-    signOut: '.go-to-logout',
   });
   ipcRenderer.sendToHost('header-background-change', 'white');
 } else {
