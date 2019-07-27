@@ -6,8 +6,8 @@
   "scripts": {
     "serve": "vue-cli-service serve:electron",
     "serve:debug": "vue-cli-service serve:electron --debug",
-    "build": "vue-cli-service build:electron",
-    "build:extapp": "cargo build --release",
+    "build": "npm run build:extapp && vue-cli-service build:electron",
+    "build:extapp": "cd src/extapp && cargo build --release",
     "rebuild": "npm rebuild --update-binary && electron-rebuild",
     "lint": "vue-cli-service lint",
     "lint:prettier": "prettier-eslint-check \"**/*.{js,jsx,json,ts,tsx,scss,vue,md}\"",
