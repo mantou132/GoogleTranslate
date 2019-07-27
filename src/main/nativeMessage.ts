@@ -9,7 +9,7 @@ import { getTranslateString } from '../util';
 
 export function installNativeMessageManifest(isDevelopment: boolean) {
   const manifest = {
-    name: 'google-translate-bridge',
+    name: 'google_translate_bridge',
     description: '谷歌翻译',
     path: isDevelopment
       ? `${process.cwd()}/src/extapp/target/debug/google-translate-bridge`
