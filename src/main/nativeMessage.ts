@@ -9,11 +9,11 @@ import { getTranslateString } from '../util';
 
 export function installNativeMessageManifest(isDevelopment: boolean) {
   const manifest = {
-    name: 'google_translate',
+    name: 'google-translate-bridge',
     description: '谷歌翻译',
     path: isDevelopment
-      ? `${process.cwd()}/src/extapp/index`
-      : `${process.resourcesPath}/extapp`,
+      ? `${process.cwd()}/src/extapp/target/debug/google-translate-bridge`
+      : `${process.resourcesPath}/google-translate-bridge`,
     type: 'stdio',
   };
 
@@ -53,7 +53,7 @@ export function installNativeMessageManifest(isDevelopment: boolean) {
         ...opt,
         dir: undefined,
       };
-      const filePath = path.resolve(absDir, 'google_translate.json');
+      const filePath = path.resolve(absDir, 'google-translate-bridge.json');
       try {
         await promisify(fs.writeFile)(filePath, JSON.stringify(data, null, 2));
       } catch (e) {
@@ -70,7 +70,7 @@ export function initIpcService(
   isDevelopment: boolean,
 ) {
   installNativeMessageManifest(isDevelopment);
-  ipc.config.id = 'google-translate';
+  ipc.config.id = 'google-translate-bridge';
   ipc.config.retry = 1000;
   ipc.config.silent = true;
   ipc.serve(() =>

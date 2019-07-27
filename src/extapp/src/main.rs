@@ -29,11 +29,10 @@ fn _log(buf: &[u8]) {
     file.write_all(b"\n").unwrap();
 }
 
-fn write_stdout(msg: &str) {
+fn write_stdout(buf: &[u8]) {
     let mut len_buf = [0; 4];
-    let msg_buf = msg.as_bytes();
-    NativeEndian::write_u32(&mut len_buf, msg_buf.len().try_into().unwrap());
-    let content = [&len_buf, msg_buf].concat();
+    NativeEndian::write_u32(&mut len_buf, buf.len().try_into().unwrap());
+    let content = [&len_buf, buf].concat();
     // _log(&content);
     io::stdout().write_all(&content).unwrap();
     io::stdout().write_all(b"\n").unwrap();
@@ -50,10 +49,8 @@ struct NativeApp {
 }
 
 impl NativeApp {
-    fn send_message(&mut self, data: &str) {
-        let js_msg:JsMessage = serde_json::from_str(data).unwrap();
-        let js_msg = serde_json::to_string(&js_msg).unwrap();
-        let js_msg = [js_msg.as_bytes(), &DELIMITER].concat();
+    fn send_message(&mut self, buf: &[u8]) {
+        let js_msg = [buf, &DELIMITER].concat();
         // _log(&js_msg);
         self.socket.write_all(&js_msg).unwrap();
     }
@@ -61,7 +58,8 @@ impl NativeApp {
 
 fn main() {
     let mut app = NativeApp { socket: UnixStream::connect(get_socket_path()).unwrap() };
-    write_stdout(&serde_json::to_string("connect").unwrap());
+    let msg: JsMessage = JsMessage { r#type: "connected", data: Value::String(String::new()) };
+    write_stdout(serde_json::to_string(&msg).unwrap().as_bytes());
 
     let stdin = io::stdin();
     let mut stdin = stdin.lock();
@@ -72,6 +70,6 @@ fn main() {
         stdin.read_exact(&mut len_buf).unwrap();
         let len = NativeEndian::read_u32(&len_buf).try_into().unwrap();
         stdin.read_exact(&mut content[..len]).unwrap();
-        app.send_message(str::from_utf8(&content[..len]).unwrap());
+        app.send_message(&content[..len]);
     }
 }
