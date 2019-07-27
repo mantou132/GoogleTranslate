@@ -53,7 +53,7 @@ export function installNativeMessageManifest(isDevelopment: boolean) {
         ...opt,
         dir: undefined,
       };
-      const filePath = path.resolve(absDir, 'google-translate-bridge.json');
+      const filePath = path.resolve(absDir, 'google_translate_bridge.json');
       try {
         await promisify(fs.writeFile)(filePath, JSON.stringify(data, null, 2));
       } catch (e) {
