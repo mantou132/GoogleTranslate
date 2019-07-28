@@ -12,7 +12,7 @@ export function installNativeMessageManifest(isDevelopment: boolean) {
     name: 'google_translate_bridge',
     description: '谷歌翻译',
     path: isDevelopment
-      ? `${process.cwd()}/src/extapp/target/debug/google-translate-bridge`
+      ? `${process.cwd()}/src/extapp/target/debug/bridge`
       : `${process.resourcesPath}/google-translate-bridge`,
     type: 'stdio',
   };

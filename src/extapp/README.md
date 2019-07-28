@@ -33,4 +33,3 @@ cp target/release/google-translate-bridge bridge
 ### TODO
 
 - 支持 windows pipe name
-- 支持双向数据传递(目前只支持浏览器扩展通过标准输入，node-ipc 传递到 node app)

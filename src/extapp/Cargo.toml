@@ -1,5 +1,5 @@
 [package]
-name = "google-translate-bridge"
+name = "bridge"
 version = "0.1.0"
 authors = ["王先硚 <709922234@qq.com>"]
 edition = "2018"

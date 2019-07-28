@@ -38,7 +38,7 @@ module.exports = {
         productName: 'Google 翻译',
         appId: 'org.moefe.googletranslate',
         extraResources: {
-          from: 'src/extapp/target/release/google-translate-bridge',
+          from: 'src/extapp/target/release/bridge',
           to: './google-translate-bridge',
         },
         mac: {
