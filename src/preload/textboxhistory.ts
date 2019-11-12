@@ -1,7 +1,8 @@
-import { throttle } from './util';
-import { getTranslateString } from '../../util';
+import { getTranslateString } from '../utils';
 
-export default function (arg: HTMLTextAreaElement, submit?: string) {
+import { throttle } from './utils';
+
+export default function(arg: HTMLTextAreaElement, submit?: string) {
   let isComposition = false;
   const valueHistory = {
     currentPosition: 0,
@@ -14,9 +15,7 @@ export default function (arg: HTMLTextAreaElement, submit?: string) {
 
   function addValueToHistory(text: string) {
     if (!isComposition) {
-      if (
-        text === valueHistory.historyValuePool[valueHistory.currentPosition]
-      ) {
+      if (text === valueHistory.historyValuePool[valueHistory.currentPosition]) {
         return;
       }
       valueHistory.historyValuePool.length = valueHistory.currentPosition + 1;
@@ -30,39 +29,30 @@ export default function (arg: HTMLTextAreaElement, submit?: string) {
   }
 
   function undo() {
-    const recentHistoryValue =
-      valueHistory.historyValuePool[valueHistory.currentPosition];
+    const recentHistoryValue = valueHistory.historyValuePool[valueHistory.currentPosition];
     if (textarea.value !== recentHistoryValue) {
       textarea.value = recentHistoryValue;
     } else if (valueHistory.currentPosition) {
       valueHistory.currentPosition -= 1;
-      textarea.value =
-        valueHistory.historyValuePool[valueHistory.currentPosition];
+      textarea.value = valueHistory.historyValuePool[valueHistory.currentPosition];
     }
   }
 
   function redo() {
-    if (
-      valueHistory.currentPosition + 1 <
-      valueHistory.historyValuePool.length
-    ) {
+    if (valueHistory.currentPosition + 1 < valueHistory.historyValuePool.length) {
       valueHistory.currentPosition += 1;
-      textarea.value =
-        valueHistory.historyValuePool[valueHistory.currentPosition];
+      textarea.value = valueHistory.historyValuePool[valueHistory.currentPosition];
     }
   }
   const throttleAddValueToHistory = throttle(addValueToHistory, 1000);
 
-  const textareaProtoProp = Object.getOwnPropertyDescriptor(
-    HTMLTextAreaElement.prototype,
-    'value',
-  );
+  const textareaProtoProp = Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, 'value');
   Object.defineProperty(textarea, 'value', {
     ...textareaProtoProp,
     set(v) {
       const value = String(v);
       throttleAddValueToHistory(value);
-      return textareaProtoProp!.set!.apply(this, [value]);
+      return textareaProtoProp?.set?.apply(this, [value]);
     },
   });
 
@@ -76,10 +66,7 @@ export default function (arg: HTMLTextAreaElement, submit?: string) {
 
   textarea.addEventListener('keydown', (e: KeyboardEvent) => {
     // command + y or command + shift + z
-    if (
-      (e.keyCode === 89 || (e.keyCode === 90 && e.shiftKey)) &&
-      (e.metaKey || e.ctrlKey)
-    ) {
+    if ((e.keyCode === 89 || (e.keyCode === 90 && e.shiftKey)) && (e.metaKey || e.ctrlKey)) {
       e.preventDefault();
       redo();
     }
@@ -90,16 +77,14 @@ export default function (arg: HTMLTextAreaElement, submit?: string) {
     }
   });
   textarea.addEventListener('paste', (e: ClipboardEvent) => {
-    const isSelectionAll =
-      !textarea.selectionStart &&
-      textarea.selectionEnd === textarea.value.length;
+    const isSelectionAll = !textarea.selectionStart && textarea.selectionEnd === textarea.value.length;
     if (!textarea.value.trim() || isSelectionAll) {
       // Prevent the default pasting event and stop bubbling
       e.preventDefault();
       e.stopPropagation();
 
       // Get the clipboard data
-      const newString = e.clipboardData.getData('text');
+      const newString = e?.clipboardData?.getData('text');
       if (!newString) return;
 
       const originStr = getTranslateString(newString);

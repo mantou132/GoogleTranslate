@@ -1,19 +1,20 @@
+/* eslint-disable @typescript-eslint/camelcase */
 import process from 'process';
 import path from 'path';
 import fs from 'fs';
+import { promisify } from 'util';
+
+import { dialog } from 'electron';
 import mkdirp from 'mkdirp';
 import ipc from 'node-ipc';
-import { dialog } from 'electron';
-import { promisify } from 'util';
-import { getTranslateString } from '../util';
+
+import { getTranslateString } from '../utils';
 
 export function installNativeMessageManifest(isDevelopment: boolean) {
   const manifest = {
     name: 'google_translate_bridge',
     description: '谷歌翻译',
-    path: isDevelopment
-      ? `${process.cwd()}/src/extapp/target/debug/bridge`
-      : `${process.resourcesPath}/google-translate-bridge`,
+    path: isDevelopment ? `${process.cwd()}/src/bridge/target/debug/bridge` : `${__public}/google-translate-bridge`,
     type: 'stdio',
   };
 
@@ -29,8 +30,7 @@ export function installNativeMessageManifest(isDevelopment: boolean) {
       allowed_origins: ['chrome-extension://hjaohjgedndjjaegicnfikppfjbboohf/'],
     },
     {
-      dir:
-        'Library/Application Support/Google/Chrome Canary/NativeMessagingHosts',
+      dir: 'Library/Application Support/Google/Chrome Canary/NativeMessagingHosts',
       allowed_origins: ['chrome-extension://hjaohjgedndjjaegicnfikppfjbboohf/'],
     },
     {
@@ -39,7 +39,7 @@ export function installNativeMessageManifest(isDevelopment: boolean) {
     },
   ];
 
-  browsersOpt.forEach(async (opt) => {
+  browsersOpt.forEach(async opt => {
     const title = 'Google 翻译添加浏览器支持失败';
     const absDir = path.resolve(process.env.HOME!, opt.dir);
     try {
@@ -65,18 +65,14 @@ export function installNativeMessageManifest(isDevelopment: boolean) {
   });
 }
 
-export function initIpcService(
-  mainWindow: Menubar.MenubarApp,
-  isDevelopment: boolean,
-) {
+export function initIpcService(window: Electron.BrowserWindow, isDevelopment: boolean) {
   installNativeMessageManifest(isDevelopment);
   ipc.config.id = 'google-translate-bridge';
   ipc.config.retry = 1000;
   ipc.config.silent = true;
   ipc.serve(() =>
-    ipc.server.on('translate-text', (message) => {
-      const { window } = mainWindow;
-      mainWindow.showWindow();
+    ipc.server.on('translate-text', message => {
+      window.show();
 
       const originStr = getTranslateString(message);
       window.webContents.send('translate-clipboard-text', originStr);

@@ -1,18 +1,15 @@
 {
-  "editor.formatOnSave": true,
-  "prettier.eslintIntegration": true,
-  "tslint.enable": true,
-  "tslint.autoFixOnSave": true,
+  "editor.formatOnSave": false,
+  "typescript.validate.enable": true,
+  "typescript.format.enable": false,
+  "javascript.validate.enable": true,
+  "javascript.format.enable": false,
+  "typescript.tsdk": "node_modules/typescript/lib",
   "eslint.autoFixOnSave": true,
-  "eslint.enable": true,
+  "eslint.options": { "ignorePath": ".gitignore" },
   "eslint.validate": [
-    "javascript",
-    "javascriptreact",
-    "typescript",
-    "typescriptreact"
-  ],
-  "files.exclude": {
-    "build": true
-  },
-  "emmet.excludeLanguages": ["typescriptreact"]
+    { "language": "javascript", "autoFix": true },
+    { "language": "typescript", "autoFix": true },
+    { "language": "typescriptreact", "autoFix": true }
+  ]
 }

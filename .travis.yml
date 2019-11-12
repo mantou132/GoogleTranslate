@@ -1,15 +1,10 @@
 language: node_js
 
-node_js: 9
-
-install:
-  - yarn
+node_js: '12'
 
 script:
-  - yarn lint
-  - yarn lint:prettier
+  - npm run lint
 
-cache:
-  yarn: true
-  directories:
-    - node_modules
+branches:
+  only:
+    - master

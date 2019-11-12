@@ -1,80 +1,81 @@
 {
   "name": "google-translate",
   "version": "3.3.2",
-  "private": true,
-  "main": "build/bundled/background.js",
+  "description": "google translate, work io any app",
+  "main": "./dist/index.js",
   "scripts": {
-    "serve": "vue-cli-service serve:electron",
-    "serve:debug": "vue-cli-service serve:electron --debug",
-    "build": "npm run build:extapp && vue-cli-service build:electron",
-    "build:extapp": "cd src/extapp && cargo build --release",
+    "lint": "tsc --noEmit && eslint --ext .ts --fix src/",
+    "clean": "rm -rf ./dist",
+    "watch": "npm run clean && NODE_ENV=development webpack --watch",
+    "start": "nodemon --watch dist --exec 'electron ./dist --inspect'",
     "rebuild": "npm rebuild --update-binary && electron-rebuild",
-    "lint": "vue-cli-service lint",
-    "lint:prettier": "prettier-eslint-check \"**/*.{js,jsx,json,ts,tsx,scss,vue,md}\"",
-    "format": "prettier-eslint \"**/*.{js,jsx,json,ts,tsx,scss,vue,md}\" --write",
-    "contributors": "all-contributors"
+    "build:bridge": "cd src/bridge && cargo build --release && cp target/release/bridge ../../dist/google-translate-bridge",
+    "build": "npm run clean && npm run lint && webpack && npm run build:extapp && electron-builder ./dist"
+  },
+  "keywords": [
+    "google",
+    "translate",
+    "electron"
+  ],
+  "author": "mt",
+  "license": "ISC",
+  "dependencies": {
+    "@mantou/gem": "^0.1.11",
+    "auto-launch": "^5.0.5",
+    "lodash": "^4.17.15",
+    "mkdirp": "^0.5.1",
+    "node-fetch": "^2.6.0",
+    "robotjs": "^0.5.1",
+    "node-ipc": "^9.1.1"
+  },
+  "devDependencies": {
+    "@types/auto-launch": "^5.0.1",
+    "@types/html-webpack-plugin": "^3.2.1",
+    "@types/lodash": "^4.14.146",
+    "@types/mkdirp": "^0.5.2",
+    "@types/node": "^12.12.6",
+    "@types/node-fetch": "^2.5.3",
+    "@types/node-ipc": "^9.1.2",
+    "@types/webpack": "^4.39.8",
+    "@typescript-eslint/eslint-plugin": "^2.6.1",
+    "@typescript-eslint/parser": "^2.6.1",
+    "electron": "^6.1.4",
+    "electron-builder": "^21.2.0",
+    "electron-rebuild": "^1.8.6",
+    "eslint": "^6.6.0",
+    "eslint-config-prettier": "^6.5.0",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-prettier": "^3.1.1",
+    "file-loader": "^4.2.0",
+    "html-webpack-plugin": "^3.2.0",
+    "husky": "^2.7.0",
+    "lint-staged": "^8.2.1",
+    "node-loader": "^0.6.0",
+    "nodemon": "^1.19.4",
+    "prettier": "^1.19.0",
+    "ts-loader": "^6.2.1",
+    "ts-node": "^8.4.1",
+    "typescript": "^3.7.2",
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.10"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.ts": [
+      "eslint --fix",
+      "git add"
+    ]
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/mantou132/GoogleTranslate.git"
   },
-  "dependencies": {
-    "auto-launch": "^5.0.5",
-    "lodash": "^4.17.10",
-    "menubar": "https://github.com/mantou132/menubar",
-    "mkdirp": "^0.5.1",
-    "node-fetch": "^2.2.0",
-    "node-ipc": "^9.1.1",
-    "robotjs": "^0.5.1",
-    "vue": "^2.5.17",
-    "vue-class-component": "^6.2.0",
-    "vue-emotion": "^0.4.2",
-    "vue-router": "^3.0.1"
+  "bugs": {
+    "url": "https://github.com/mantou132/GoogleTranslate/issues"
   },
-  "devDependencies": {
-    "@types/auto-launch": "^5.0.0",
-    "@types/extend": "^3.0.0",
-    "@types/lodash": "^4.14.116",
-    "@types/menubar": "^5.1.6",
-    "@types/mkdirp": "^0.5.2",
-    "@types/node-fetch": "^2.1.2",
-    "@types/node-ipc": "^9.1.1",
-    "@vue/cli-plugin-babel": "^3.0.1",
-    "@vue/cli-plugin-eslint": "^3.0.1",
-    "@vue/cli-plugin-typescript": "^3.0.1",
-    "@vue/cli-service": "^3.0.1",
-    "@vue/eslint-config-airbnb": "^3.0.1",
-    "@vue/eslint-config-typescript": "^3.0.1",
-    "all-contributors-cli": "^5.4.0",
-    "babel-plugin-emotion": "^9.2.8",
-    "babel-plugin-jsx-v-model": "^2.0.3",
-    "electron": "^2.0.8",
-    "electron-devtools-installer": "^2.2.4",
-    "electron-positioner": "^4.1.0",
-    "electron-rebuild": "^1.8.2",
-    "emotion": "^9.2.8",
-    "lint-staged": "^7.2.2",
-    "prettier": "^1.14.2",
-    "prettier-eslint-check": "^1.0.1",
-    "prettier-eslint-cli": "^4.7.1",
-    "typescript": "^3.0.3",
-    "typescript-styled-plugin": "^0.10.0",
-    "vue-cli-plugin-electron-builder": "1.0.0-rc.2",
-    "vue-jsx-hot-loader": "^1.4.0",
-    "vue-template-compiler": "^2.5.17",
-    "vue-tsx-support": "^2.1.1",
-    "write-file-webpack-plugin": "^4.4.0"
-  },
-  "browserslist": [
-    "> 1%",
-    "last 2 versions",
-    "not ie <= 8"
-  ],
-  "gitHooks": {
-    "pre-commit": "lint-staged"
-  },
-  "lint-staged": {
-    "*.{js,jsx,ts,tsx,vue}": "vue-cli-service lint --no-fix",
-    "*.{js,jsx,json,ts,tsx,scss,vue,md}": "prettier-eslint-check"
-  }
+  "homepage": "https://github.com/mantou132/GoogleTranslate#readme"
 }

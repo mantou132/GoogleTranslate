@@ -1,0 +1,3 @@
+[submodule "src/bridge"]
+	path = src/bridge
+	url = https://github.com/mantou132/web-ext-native-message/
