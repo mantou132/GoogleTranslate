@@ -8,9 +8,10 @@
     "clean": "rm -rf ./dist",
     "watch": "npm run clean && NODE_ENV=development webpack --watch",
     "start": "nodemon --watch dist --exec 'electron ./dist --inspect'",
-    "rebuild": "npm rebuild --update-binary && electron-rebuild",
+    "build:rs": "electron-build-env neon build enigojs --release",
+    "rebuild": "npm rebuild --update-binary && electron-rebuild && npm run build:rs",
     "build:bridge": "cd src/bridge && cargo build --release && cp target/release/bridge ../../dist/google-translate-bridge",
-    "build": "npm run clean && npm run lint && webpack && npm run build:extapp && electron-builder ./dist"
+    "build": "npm run clean && npm run lint && webpack && npm run build:bridge && electron-builder ./dist"
   },
   "keywords": [
     "google",
@@ -22,10 +23,10 @@
   "dependencies": {
     "@mantou/gem": "^0.1.11",
     "auto-launch": "^5.0.5",
+    "enigojs": "0.0.7",
     "lodash": "^4.17.15",
     "mkdirp": "^0.5.1",
     "node-fetch": "^2.6.0",
-    "robotjs": "^0.5.1",
     "node-ipc": "^9.1.1"
   },
   "devDependencies": {
@@ -40,6 +41,7 @@
     "@typescript-eslint/eslint-plugin": "^2.6.1",
     "@typescript-eslint/parser": "^2.6.1",
     "electron": "^6.1.4",
+    "electron-build-env": "^0.2.0",
     "electron-builder": "^21.2.0",
     "electron-rebuild": "^1.8.6",
     "eslint": "^6.6.0",
@@ -50,6 +52,7 @@
     "html-webpack-plugin": "^3.2.0",
     "husky": "^2.7.0",
     "lint-staged": "^8.2.1",
+    "neon-cli": "^0.3.3",
     "node-loader": "^0.6.0",
     "nodemon": "^1.19.4",
     "prettier": "^1.19.0",

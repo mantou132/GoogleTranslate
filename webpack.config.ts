@@ -1,7 +1,7 @@
-import * as path from 'path';
+import path from 'path';
 
-import * as webpack from 'webpack';
-import * as HtmlWebpackPlugin from 'html-webpack-plugin';
+import webpack from 'webpack';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
 
 const isDevelopment = process.env.NODE_ENV === 'development';
 
@@ -28,7 +28,7 @@ const commonConfig: webpack.Configuration = {
     ],
   },
   resolve: {
-    extensions: ['.tsx', '.ts', '.js'],
+    extensions: ['.tsx', '.ts', '.js', '.node'],
   },
   output: {
     publicPath: './',

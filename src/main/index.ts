@@ -1,6 +1,6 @@
 import { app, BrowserWindow, Tray, screen, globalShortcut, clipboard, MenuItem, Menu, ipcMain } from 'electron';
 import AutoLaunch from 'auto-launch';
-import robotjs from 'robotjs';
+import { keySequenceParse } from 'enigojs';
 
 import { getTranslateString } from '../utils';
 import config from '../config';
@@ -73,7 +73,7 @@ app.on('ready', () => {
     } else {
       const oldString = clipboard.readText();
       clipboard.writeText(''); // clear clipboard text
-      robotjs.keyTap('c', 'command'); // Invalid when no selection text
+      keySequenceParse('{+META}c{-META}'); // Invalid when no selection text
       await new Promise(resolve => setTimeout(resolve, 300));
 
       const newString = clipboard.readText();

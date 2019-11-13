@@ -31,6 +31,10 @@ A：可能被 OS 禁止了，试试重新为应用授权。如：<a href="./scre
 ## 开发
 
 ```bash
+# install dep
+npm i
+# build rust native module
+npm run rebuild
 # serve renderer/preload
 npm run watch
 # run electron app
