@@ -44,6 +44,7 @@ app.on('ready', () => {
     y: Number(((height - 800) / 2).toFixed()),
     width: 400,
     height: 800,
+    show: false,
     transparent: true,
     vibrancy: 'light',
     titleBarStyle: 'customButtonsOnHover',
