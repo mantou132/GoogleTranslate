@@ -1,4 +1,11 @@
 # Goolge Translate
+<p align="center">
+  <a href="https://github.com/mantou132/GoogleTranslate/releases"><img alt="GitHub release" src="https://img.shields.io/github/release/mantou132/GoogleTranslate.svg?style=for-the-badge"></a>
+  <a href="https://travis-ci.org/mantou132/GoogleTranslate"><img alt="Build Status" src="https://img.shields.io/travis/mantou132/GoogleTranslate/google-webapp.svg?style=for-the-badge"></a>
+  <a href="./LICENSE"><img alt="LICENSE GPL" src="https://img.shields.io/badge/license-gpl-yellow.svg?style=for-the-badge"></a>
+  <a href="https://github.com/prettier/prettier"><img alt="Code Style: Prettier" src="https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=for-the-badge"></a>
+</p>
+<img alt="应用程序主界面" src="./screenshot/Screen Shot 2019-11-16 at 15.09.29.png">
 
 ## 使用方式
 
