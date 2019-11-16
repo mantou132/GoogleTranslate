@@ -1,7 +1,6 @@
 import path from 'path';
 
 import webpack from 'webpack';
-import HtmlWebpackPlugin from 'html-webpack-plugin';
 
 const isDevelopment = process.env.NODE_ENV === 'development';
 
@@ -55,18 +54,6 @@ const configs: webpack.Configuration[] = [
     ...commonConfig,
     entry: { index: './src/main' },
     target: 'electron-main',
-  },
-  {
-    ...commonConfig,
-    entry: { renderer: './src/renderer' },
-    target: 'electron-renderer',
-    plugins: [
-      ...(commonConfig.plugins || []),
-      new HtmlWebpackPlugin({
-        filename: 'renderer.html',
-        template: 'public/renderer.html',
-      }),
-    ],
   },
   {
     ...commonConfig,
