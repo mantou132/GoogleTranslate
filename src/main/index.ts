@@ -36,26 +36,26 @@ let tray: Tray;
 app.on('ready', () => {
   const window = new Window({});
 
-  tray = new Tray(`${__public}/iconTemplate@2x.png`);
-  tray
-    .on('click', () => {
-      if (window.isVisible()) {
-        window.fadeOut();
-      } else {
-        window.fadeIn();
-      }
-    })
-    .on('right-click', () => {
-      const contextMenu = Menu.buildFromTemplate([
-        {
-          label: 'Quit',
-          click() {
-            app.exit();
-          },
-        },
-      ]);
-      tray.popUpContextMenu(contextMenu);
-    });
+  // tray = new Tray(`${__public}/iconTemplate@2x.png`);
+  // tray
+  //   .on('click', () => {
+  //     if (window.isVisible()) {
+  //       window.fadeOut();
+  //     } else {
+  //       window.fadeIn();
+  //     }
+  //   })
+  //   .on('right-click', () => {
+  //     const contextMenu = Menu.buildFromTemplate([
+  //       {
+  //         label: 'Quit',
+  //         click() {
+  //           app.exit();
+  //         },
+  //       },
+  //     ]);
+  //     tray.popUpContextMenu(contextMenu);
+  //   });
 
   globalShortcut.register('CommandOrControl+Q', async () => {
     if (!window) return;
