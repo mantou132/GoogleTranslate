@@ -8,6 +8,7 @@ import lang from './lang';
 import { click } from './utils';
 
 import './shortcut';
+import './animate';
 
 interface InitPageOption {
   sourceTextArea: string;

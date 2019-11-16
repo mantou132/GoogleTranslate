@@ -9,12 +9,13 @@ import mkdirp from 'mkdirp';
 import ipc from 'node-ipc';
 
 import { getTranslateString } from '../utils';
+import config from '../config';
 
-export function installNativeMessageManifest(isDevelopment: boolean) {
+export function installNativeMessageManifest() {
   const manifest = {
     name: 'google_translate_bridge',
     description: '谷歌翻译',
-    path: isDevelopment ? `${process.cwd()}/src/bridge/target/debug/bridge` : `${__public}/google-translate-bridge`,
+    path: config.isDebug ? `${process.cwd()}/src/bridge/target/debug/bridge` : `${__public}/google-translate-bridge`,
     type: 'stdio',
   };
 
@@ -65,8 +66,8 @@ export function installNativeMessageManifest(isDevelopment: boolean) {
   });
 }
 
-export function initIpcService(window: Electron.BrowserWindow, isDevelopment: boolean) {
-  installNativeMessageManifest(isDevelopment);
+export function initIpcService(window: Electron.BrowserWindow) {
+  installNativeMessageManifest();
   ipc.config.id = 'google-translate-bridge';
   ipc.config.retry = 1000;
   ipc.config.silent = true;

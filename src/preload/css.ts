@@ -7,13 +7,6 @@ export default async () => {
 
   const style = document.createElement('style');
   style.innerText = css`
-    /* debug */
-    body {
-      -webkit-app-region: drag;
-    }
-    a {
-      -webkit-app-region: no-drag;
-    }
     header {
       margin-top: -1px !important;
       height: 0 !important;
@@ -40,6 +33,21 @@ export default async () => {
     }
     .jfk-button-flat:focus {
       border-color: transparent !important;
+    }
+
+    body {
+      -webkit-app-region: drag;
+      background: transparent;
+      transform: translateX(100%);
+    }
+    a {
+      -webkit-app-region: no-drag;
+    }
+    .frame {
+      background: #f5f5f5;
+      margin-left: 20px;
+      filter: drop-shadow(rgba(0, 0, 0, 0.5) 0px 0px 0.5px);
+      box-shadow: 0 1px 10px rgba(0, 0, 0, 0.15) !important;
     }
   `;
   document.head.append(style);

@@ -1,18 +1,15 @@
-import { app, BrowserWindow, Tray, screen, globalShortcut, clipboard, MenuItem, Menu, ipcMain } from 'electron';
+import { app, Tray, globalShortcut, MenuItem, Menu } from 'electron';
 import AutoLaunch from 'auto-launch';
-import { keySequenceParse } from 'enigojs';
 
-import { getTranslateString } from '../utils';
 import config from '../config';
 
+import Window from './window';
 import checkForUpdates from './checkForUpdates';
-import { initIpcService } from './nativeMessage';
-
-const isDevelopment = process.env.NODE_ENV !== 'production';
+import { getSelectionText } from './utils';
 
 process.env.GOOGLE_API_KEY = 'AIzaSyB0X6iZUJXzdqBK-3TOzKIx6p14J2Eb4OU';
 
-if (!isDevelopment) {
+if (!config.isDebug) {
   const googleTranslateAutoLaunch = new AutoLaunch({ name: 'Google 翻译' });
   googleTranslateAutoLaunch.isEnabled().then(isEnabled => {
     if (!isEnabled) {
@@ -36,77 +33,39 @@ if (!isDevelopment) {
 }
 
 let tray: Tray;
-let window: BrowserWindow | null;
 app.on('ready', () => {
-  const { width, height } = screen.getPrimaryDisplay().workAreaSize;
-  window = new BrowserWindow({
-    x: width - 400 - 10,
-    y: Number(((height - 800) / 2).toFixed()),
-    width: 400,
-    height: 800,
-    show: false,
-    transparent: true,
-    vibrancy: 'light',
-    titleBarStyle: 'customButtonsOnHover',
-    minimizable: false,
-    maximizable: false,
-    closable: false, // 不能用常规方法退出，需要在 before-quite 中自行退出 app
-    webPreferences: {
-      nodeIntegration: true,
-      preload: `${__dirname}/preload.js`,
-    },
-  });
+  const window = new Window({});
 
-  window.loadURL(config.translateUrl);
+  tray = new Tray(`${__public}/iconTemplate@2x.png`);
+  tray
+    .on('click', () => {
+      if (window.isVisible()) {
+        window.fadeOut();
+      } else {
+        window.fadeIn();
+      }
+    })
+    .on('right-click', () => {
+      const contextMenu = Menu.buildFromTemplate([
+        {
+          label: 'Quit',
+          click() {
+            app.exit();
+          },
+        },
+      ]);
+      tray.popUpContextMenu(contextMenu);
+    });
 
-  new Promise((resolve, reject) => {
-    window?.webContents.addListener('did-finish-load', resolve);
-    setTimeout(reject, 3000);
-  }).catch(() => {
-    window?.loadURL(config.translateUrlFallback);
-  });
-
-  initIpcService(window, isDevelopment);
   globalShortcut.register('CommandOrControl+Q', async () => {
     if (!window) return;
     if (window.isVisible()) {
-      window.hide();
+      window.fadeOut();
     } else {
-      const oldString = clipboard.readText();
-      clipboard.writeText(''); // clear clipboard text
-      keySequenceParse('{+META}c{-META}'); // Invalid when no selection text
-      await new Promise(resolve => setTimeout(resolve, 300));
-
-      const newString = clipboard.readText();
-      const originStr = getTranslateString(newString);
-
-      clipboard.writeText(oldString);
-      window.show();
-
-      window.webContents.send('translate-clipboard-text', originStr);
+      window.fadeIn();
+      window.webContents.send('translate-clipboard-text', await getSelectionText());
     }
   });
-
-  window.on('closed', () => {
-    window = null;
-  });
-
-  window.on('blur', () => {
-    window?.hide();
-  });
-
-  tray = new Tray(`${__public}/iconTemplate@2x.png`);
-  tray.on('click', () => {
-    window?.show();
-  });
-});
-
-ipcMain.on('show-window', () => {
-  window?.show();
-});
-
-ipcMain.on('hide-window', () => {
-  window?.hide();
 });
 
 app.on('before-quit', () => {
