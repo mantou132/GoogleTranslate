@@ -1,6 +1,11 @@
-language: node_js
+language: rust
+addons:
+  apt:
+    packages:
+      - libxdo-dev
 
 node_js: '12'
+install: npm install
 
 script:
   - npm run lint

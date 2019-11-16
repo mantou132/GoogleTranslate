@@ -38,6 +38,8 @@ A：可能被 OS 禁止了，试试重新为应用授权。如：<a href="./scre
 ## 开发
 
 ```bash
+# install rust environment
+
 # install dep
 npm i
 # build rust native module
