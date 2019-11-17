@@ -1,5 +1,7 @@
 import { css } from '@mantou/gem';
 
+import config from '../config';
+
 export default async () => {
   await new Promise(resolve => {
     window.addEventListener('DOMContentLoaded', resolve);
@@ -36,16 +38,12 @@ export default async () => {
     }
 
     body {
-      -webkit-app-region: drag;
       background: transparent;
       transform: translateX(100%);
     }
-    a {
-      -webkit-app-region: no-drag;
-    }
     .frame {
       background: #f5f5f5;
-      margin-left: 20px;
+      margin: ${config.isWin ? '20px' : 0} 0 0 20px;
       filter: drop-shadow(rgba(0, 0, 0, 0.5) 0px 0px 0.5px);
       box-shadow: 0 1px 10px rgba(0, 0, 0, 0.15) !important;
     }

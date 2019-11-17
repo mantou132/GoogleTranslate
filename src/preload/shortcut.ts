@@ -10,6 +10,6 @@ window.addEventListener('keydown', e => {
   }
   // esc
   if (e.keyCode === 27) {
-    ipcRenderer.send('hide-window');
+    ipcRenderer.emit('fade-out');
   }
 });

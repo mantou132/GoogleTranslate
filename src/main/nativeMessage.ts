@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import process from 'process';
+import os from 'os';
 import path from 'path';
 import fs from 'fs';
 import { promisify } from 'util';
@@ -15,7 +16,9 @@ export function installNativeMessageManifest() {
   const manifest = {
     name: 'google_translate_bridge',
     description: '谷歌翻译',
-    path: config.isDebug ? `${process.cwd()}/src/bridge/target/debug/bridge` : `${__public}/google-translate-bridge`,
+    path: config.isDebug
+      ? path.resolve(process.cwd(), 'src/bridge/target/debug/bridge')
+      : path.resolve(__public, 'google-translate-bridge'),
     type: 'stdio',
   };
 
@@ -42,7 +45,7 @@ export function installNativeMessageManifest() {
 
   browsersOpt.forEach(async opt => {
     const title = 'Google 翻译添加浏览器支持失败';
-    const absDir = path.resolve(process.env.HOME!, opt.dir);
+    const absDir = path.resolve(os.homedir(), opt.dir);
     try {
       try {
         await promisify(fs.readdir)(absDir);

@@ -27,7 +27,8 @@ export default class Window extends BrowserWindow {
     super({
       show: false,
       transparent: true,
-      // vibrancy: 'light',
+      frame: false,
+      skipTaskbar: true,
       titleBarStyle: 'customButtonsOnHover',
       minimizable: false,
       maximizable: false,

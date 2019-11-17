@@ -1,3 +1,5 @@
+import path from 'path';
+
 import { app, Tray, globalShortcut, MenuItem, Menu } from 'electron';
 import AutoLaunch from 'auto-launch';
 
@@ -17,7 +19,7 @@ if (!config.isDebug) {
     }
   });
   checkForUpdates();
-  app.dock.hide();
+  app.dock?.hide();
 
   const menu = new Menu();
   // 加了菜单才有 cmd + shift + i 的功能
@@ -35,27 +37,26 @@ if (!config.isDebug) {
 let tray: Tray;
 app.on('ready', () => {
   const window = new Window({});
-
-  // tray = new Tray(`${__public}/iconTemplate@2x.png`);
-  // tray
-  //   .on('click', () => {
-  //     if (window.isVisible()) {
-  //       window.fadeOut();
-  //     } else {
-  //       window.fadeIn();
-  //     }
-  //   })
-  //   .on('right-click', () => {
-  //     const contextMenu = Menu.buildFromTemplate([
-  //       {
-  //         label: 'Quit',
-  //         click() {
-  //           app.exit();
-  //         },
-  //       },
-  //     ]);
-  //     tray.popUpContextMenu(contextMenu);
-  //   });
+  tray = new Tray(path.resolve(__public, 'iconTemplate@2x.png'));
+  tray
+    .on('click', () => {
+      if (window.isVisible()) {
+        window.fadeOut();
+      } else {
+        window.fadeIn();
+      }
+    })
+    .on('right-click', () => {
+      const contextMenu = Menu.buildFromTemplate([
+        {
+          label: 'Quit',
+          click() {
+            app.exit();
+          },
+        },
+      ]);
+      tray.popUpContextMenu(contextMenu);
+    });
 
   globalShortcut.register('CommandOrControl+Q', async () => {
     if (!window) return;

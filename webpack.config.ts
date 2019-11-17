@@ -43,7 +43,9 @@ const commonConfig: webpack.Configuration = {
   },
   plugins: [
     new webpack.DefinePlugin({
-      __public: isDevelopment ? `"${__dirname}/public"` : `process.resourcesPath + "/public"`,
+      __public: isDevelopment
+        ? `'${__dirname}${path.sep}public'`.replace(/\\/g, '\\\\')
+        : `require('path').resolve(process.resourcesPath, 'public')`,
     }),
   ],
   devtool: 'source-map',
