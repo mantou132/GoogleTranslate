@@ -10,7 +10,8 @@
     "start": "nodemon --watch dist --exec \"electron ./dist --inspect\"",
     "build:rs": "electron-build-env neon build enigojs --release",
     "rebuild": "npm rebuild --update-binary && electron-rebuild && npm run build:rs",
-    "build:bridge": "cd src/bridge && cargo build --release && move-cli target/release/bridge ../../dist/google-translate-bridge",
+    "rename:bridge": "move-cli dist/bridge dist/google-translate-bridge || true && move-cli dist/bridge.exe dist/google-translate-bridge || true",
+    "build:bridge": "cargo build --release --manifest-path src/bridge/Cargo.toml -Z unstable-options --out-dir dist && npm run rename:bridge",
     "build": "npm run clean && npm run lint && webpack && npm run build:bridge && electron-builder ./dist"
   },
   "keywords": [
