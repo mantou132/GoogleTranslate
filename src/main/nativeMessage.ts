@@ -12,12 +12,14 @@ import ipc from 'node-ipc';
 import { getTranslateString } from '../utils';
 import config from '../config';
 
+import Window from './window';
+
 export function installNativeMessageManifest() {
   const manifest = {
     name: 'google_translate_bridge',
     description: '谷歌翻译',
     path: config.isDebug
-      ? path.resolve(process.cwd(), 'src/bridge/target/debug/bridge')
+      ? path.resolve(process.cwd(), 'dist/google-translate-bridge')
       : path.resolve(__public, 'google-translate-bridge'),
     type: 'stdio',
   };
@@ -69,14 +71,14 @@ export function installNativeMessageManifest() {
   });
 }
 
-export function initIpcService(window: Electron.BrowserWindow) {
+export function initIpcService(window: Window) {
   installNativeMessageManifest();
   ipc.config.id = 'google-translate-bridge';
   ipc.config.retry = 1000;
   ipc.config.silent = true;
   ipc.serve(() =>
     ipc.server.on('translate-text', message => {
-      window.show();
+      window.fadeIn();
 
       const originStr = getTranslateString(message);
       window.webContents.send('translate-clipboard-text', originStr);

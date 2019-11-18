@@ -43,7 +43,7 @@ export default async () => {
     }
     .frame {
       background: #f5f5f5;
-      margin: ${config.isWin ? '20px' : 0} 0 0 20px;
+      margin: ${config.isWin ? '20px' : '0'} 0 ${config.isLinux ? '20px' : '0'} 20px;
       filter: drop-shadow(rgba(0, 0, 0, 0.5) 0px 0px 0.5px);
       box-shadow: 0 1px 10px rgba(0, 0, 0, 0.15) !important;
     }
