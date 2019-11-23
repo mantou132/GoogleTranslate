@@ -6,6 +6,9 @@ const isDevelopment = process.env.NODE_ENV === 'development';
 
 const commonConfig: webpack.Configuration = {
   mode: isDevelopment ? 'development' : 'production',
+  watchOptions: {
+    ignored: [/node_modules/, /dist/],
+  },
   node: {
     __dirname: false,
   },
