@@ -36,7 +36,7 @@ if (!config.isDebug) {
 
 let tray: Tray;
 app.on('ready', () => {
-  const window = new Window({});
+  const window = new Window();
   tray = new Tray(path.resolve(__public, 'iconTemplate@2x.png'));
   tray
     .on('click', () => {
@@ -63,8 +63,8 @@ app.on('ready', () => {
     if (window.isVisible()) {
       window.fadeOut();
     } else {
-      window.fadeIn();
       window.webContents.send('translate-clipboard-text', await getSelectionText());
+      window.fadeIn();
     }
   });
 });

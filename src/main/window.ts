@@ -1,4 +1,4 @@
-import { BrowserWindow, ipcMain, screen } from 'electron';
+import { BrowserWindow, screen } from 'electron';
 
 import config from '../config';
 
@@ -8,8 +8,8 @@ export default class Window extends BrowserWindow {
   static getRenderPosition() {
     const mousePosition = screen.getCursorScreenPoint();
     const displaySize = screen.getDisplayNearestPoint(mousePosition).workAreaSize;
-    const isFullHeight = config.isMac && displaySize.height < 1000;
-    const isBottom = config.isWin;
+    const isFullHeight = config.platform === 'darwin' && displaySize.height < 1000;
+    const isBottom = config.platform === 'win32';
     const width = 380;
     const height = isFullHeight ? displaySize.height : 640;
     const x = displaySize.width - width;
@@ -23,7 +23,7 @@ export default class Window extends BrowserWindow {
     };
   }
 
-  constructor(opts: Electron.BrowserWindowConstructorOptions) {
+  constructor() {
     super({
       show: false,
       transparent: true,
@@ -33,18 +33,17 @@ export default class Window extends BrowserWindow {
       minimizable: false,
       maximizable: false,
       closable: false, // 不能用常规方法退出，需要在 before-quite 中自行退出 app
-      alwaysOnTop: config.isDebug,
+      alwaysOnTop: true,
       hasShadow: false,
       webPreferences: {
         nodeIntegration: true,
         preload: `${__dirname}/preload.js`,
       },
       ...Window.getRenderPosition(),
-      ...opts,
     });
 
     this.on('blur', () => {
-      if (!config.isDebug) this.hide();
+      if (!config.isDebug) this.fadeOut();
     });
 
     this.loadURL(config.translateUrl);
@@ -57,18 +56,9 @@ export default class Window extends BrowserWindow {
     });
 
     initIpcService(this);
-
-    ipcMain.on('show-window', () => {
-      this.show();
-    });
-
-    ipcMain.on('hide-window', () => {
-      this.hide();
-    });
   }
   fadeIn() {
     const { x, y, width, height } = Window.getRenderPosition();
-    this.show();
     this.setPosition(x, y);
     this.setSize(width, height);
     this.webContents.send('fade-in');
@@ -77,6 +67,6 @@ export default class Window extends BrowserWindow {
     this.webContents.send('fade-out');
     setTimeout(() => {
       this.hide();
-    }, 500);
+    }, 200);
   }
 }
