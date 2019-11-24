@@ -5,7 +5,17 @@
   "directories": {
     "output": "build"
   },
-  "extraResources": "./public",
+  "extraResources": [
+    "./public",
+    {
+      "from": "src/bridge/target/release/bridge",
+      "to": "./public/google-translate-bridge"
+    },
+    {
+      "from": "src/bridge/target/release/bridge.exe",
+      "to": "./public/google-translate-bridge"
+    }
+  ],
   "mac": {
     "icon": "./public/icon.icns"
   }

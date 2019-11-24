@@ -70,7 +70,7 @@ export function installNativeMessageManifest() {
     name: 'google_translate_bridge',
     description: '谷歌翻译',
     path: config.isDebug
-      ? path.resolve(process.cwd(), 'dist/google-translate-bridge')
+      ? path.resolve(process.cwd(), `src/bridge/target/release/bridge${config.platform === 'win32' ? '.exe' : ''}`)
       : path.resolve(__public, 'google-translate-bridge'),
     type: 'stdio',
   };
@@ -109,7 +109,7 @@ export function installNativeMessageManifest() {
 
 export function initIpcService(window: Window) {
   installNativeMessageManifest();
-  ipc.config.id = 'google-translate-bridge';
+  ipc.config.id = config.isDebug ? 'bridge' : 'google-translate-bridge';
   ipc.config.retry = 1000;
   ipc.config.silent = true;
   ipc.serve(() =>
