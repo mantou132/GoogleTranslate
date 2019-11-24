@@ -5,7 +5,7 @@ import path from 'path';
 import fs from 'fs';
 import { promisify } from 'util';
 
-import { dialog } from 'electron';
+import { dialog, app } from 'electron';
 import mkdirp from 'mkdirp';
 import ipc from 'node-ipc';
 
@@ -13,6 +13,57 @@ import { getTranslateString } from '../utils';
 import config from '../config';
 
 import Window from './window';
+
+type BrowserName = 'Chrome' | 'Chromium' | 'Chrome Canary' | 'Firefox';
+
+function getNativeMessageDir(browser: BrowserName) {
+  // https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Native_manifests
+  // https://developer.chrome.com/extensions/nativeMessaging#native-messaging-host
+  switch (process.platform) {
+    case 'darwin':
+      switch (browser) {
+        case 'Firefox':
+          return 'Library/Application Support/Mozilla/NativeMessagingHosts';
+        case 'Chrome Canary':
+        case 'Chrome':
+          return `Library/Application Support/Google/${browser}/NativeMessagingHosts`;
+        case 'Chromium':
+          return 'Library/Application Support/Chromium/NativeMessagingHosts';
+      }
+    case 'linux':
+      switch (browser) {
+        case 'Firefox':
+          return '.mozilla/native-messaging-hosts';
+        case 'Chrome Canary':
+        case 'Chrome':
+          return `.config/google-${browser.toLowerCase().replace(' ', '-')}/NativeMessagingHosts`;
+        case 'Chromium':
+          return '.config/chromium/NativeMessagingHosts';
+      }
+    case 'win32':
+      return app.getPath('appData');
+  }
+}
+
+function getNativeMessageAllowedExtension(browser: BrowserName) {
+  if (browser === 'Firefox') {
+    return { allowed_extensions: ['{fa233117-785b-4da4-a4a2-6f5312c6381b}'] };
+  } else {
+    return { allowed_origins: ['chrome-extension://hjaohjgedndjjaegicnfikppfjbboohf/'] };
+  }
+}
+
+function writeRegistryKey(browser: BrowserName, _filePath: string) {
+  // unimplement !!!
+  switch (browser) {
+    case 'Firefox':
+      return;
+    case 'Chrome Canary':
+    case 'Chrome':
+    case 'Chromium':
+      return;
+  }
+}
 
 export function installNativeMessageManifest() {
   const manifest = {
@@ -24,30 +75,17 @@ export function installNativeMessageManifest() {
     type: 'stdio',
   };
 
-  const browsersOpt = [
-    {
-      // https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Native_manifests
-      dir: 'Library/Application Support/Mozilla/NativeMessagingHosts',
-      allowed_extensions: ['{fa233117-785b-4da4-a4a2-6f5312c6381b}'],
-    },
-    {
-      // https://developer.chrome.com/extensions/nativeMessaging#native-messaging-host
-      dir: 'Library/Application Support/Google/Chrome/NativeMessagingHosts',
-      allowed_origins: ['chrome-extension://hjaohjgedndjjaegicnfikppfjbboohf/'],
-    },
-    {
-      dir: 'Library/Application Support/Google/Chrome Canary/NativeMessagingHosts',
-      allowed_origins: ['chrome-extension://hjaohjgedndjjaegicnfikppfjbboohf/'],
-    },
-    {
-      dir: 'Library/Application Support/Chromium/NativeMessagingHosts',
-      allowed_origins: ['chrome-extension://hjaohjgedndjjaegicnfikppfjbboohf/'],
-    },
-  ];
+  const browsers: BrowserName[] = ['Chrome', 'Chrome Canary', 'Chromium', 'Firefox'];
 
-  browsersOpt.forEach(async opt => {
+  browsers.forEach(async browser => {
     const title = 'Google 翻译添加浏览器支持失败';
-    const absDir = path.resolve(os.homedir(), opt.dir);
+    const relDir = getNativeMessageDir(browser);
+    if (!relDir) return;
+    const absDir = path.resolve(os.homedir(), relDir);
+    const filePath = path.resolve(absDir, 'google_translate_bridge.json');
+    if (process.platform === 'win32') {
+      writeRegistryKey(browser, filePath);
+    }
     try {
       try {
         await promisify(fs.readdir)(absDir);
@@ -56,10 +94,8 @@ export function installNativeMessageManifest() {
       }
       const data = {
         ...manifest,
-        ...opt,
-        dir: undefined,
+        ...getNativeMessageAllowedExtension(browser),
       };
-      const filePath = path.resolve(absDir, 'google_translate_bridge.json');
       try {
         await promisify(fs.writeFile)(filePath, JSON.stringify(data, null, 2));
       } catch (e) {
