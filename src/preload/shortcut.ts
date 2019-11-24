@@ -1,4 +1,4 @@
-import { ipcRenderer, remote } from 'electron';
+import { remote } from 'electron';
 
 import { frequency } from './utils';
 
@@ -10,6 +10,6 @@ window.addEventListener('keydown', e => {
   }
   // esc
   if (e.keyCode === 27) {
-    ipcRenderer.emit('fade-out');
+    remote.getCurrentWindow().emit('blur');
   }
 });
