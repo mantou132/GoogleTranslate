@@ -25,14 +25,7 @@ const commonConfig: webpack.Configuration = {
       },
       {
         test: /\.node$/,
-        use: 'node-loader',
-      },
-      {
-        test: /\.node$/,
-        use: {
-          loader: '@zeit/webpack-asset-relocator-loader',
-          options: {},
-        },
+        loader: 'native-ext-loader',
       },
     ],
   },
