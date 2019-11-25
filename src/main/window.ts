@@ -7,13 +7,15 @@ import { initIpcService } from './nativeMessage';
 export default class Window extends BrowserWindow {
   static getRenderPosition() {
     const mousePosition = screen.getCursorScreenPoint();
-    const displaySize = screen.getDisplayNearestPoint(mousePosition).workAreaSize;
-    const isFullHeight = config.platform === 'darwin' && displaySize.height < 1000;
+    const display = screen.getDisplayNearestPoint(mousePosition);
+    const displayBounds = display.bounds;
+    const displaySize = display.workAreaSize;
+    const isFullHeight = config.platform === 'darwin' && displaySize.height < 1200;
     const isBottom = config.platform === 'win32';
     const width = 380;
     const height = isFullHeight ? displaySize.height : 640;
-    const x = displaySize.width - width;
-    const y = isBottom ? displaySize.height - height : 0;
+    const x = displayBounds.x + displaySize.width - width;
+    const y = displayBounds.y + (isBottom ? displaySize.height - height : 0);
 
     return {
       width,
@@ -62,8 +64,7 @@ export default class Window extends BrowserWindow {
   }
   fadeIn() {
     const { x, y, width, height } = Window.getRenderPosition();
-    this.setPosition(x, y);
-    this.setSize(width, height);
+    this.setBounds({ x, y, width, height });
     this.webContents.send('fade-in');
   }
   fadeOut() {
