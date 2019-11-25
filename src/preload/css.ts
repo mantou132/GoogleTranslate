@@ -1,4 +1,4 @@
-import { css } from '@mantou/gem';
+import { css } from '@mantou/gem/lib/utils';
 
 import config from '../config';
 

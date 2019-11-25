@@ -20,7 +20,7 @@
   "author": "mt",
   "license": "ISC",
   "dependencies": {
-    "@mantou/gem": "^0.1.11",
+    "@mantou/gem": "^0.1.12",
     "auto-launch": "^5.0.5",
     "lodash": "^4.17.15",
     "node-fetch": "^2.6.0",

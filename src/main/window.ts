@@ -36,6 +36,8 @@ export default class Window extends BrowserWindow {
       alwaysOnTop: true,
       hasShadow: false,
       webPreferences: {
+        webSecurity: false,
+        allowRunningInsecureContent: true,
         nodeIntegration: true,
         preload: `${__dirname}/preload.js`,
       },
@@ -48,6 +50,7 @@ export default class Window extends BrowserWindow {
 
     this.loadURL(config.translateUrl);
 
+    this.webContents.addListener('crashed', console.log);
     new Promise((resolve, reject) => {
       this.webContents.addListener('did-finish-load', resolve);
       setTimeout(reject, 3000);
