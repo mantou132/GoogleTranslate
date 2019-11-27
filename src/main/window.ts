@@ -4,6 +4,11 @@ import config from '../config';
 
 import { initIpcService } from './nativeMessage';
 
+const loadURLOptions = {
+  userAgent:
+    'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3976.0 Mobile Safari/537.36',
+};
+
 export default class Window extends BrowserWindow {
   static getRenderPosition() {
     const mousePosition = screen.getCursorScreenPoint();
@@ -50,14 +55,14 @@ export default class Window extends BrowserWindow {
       if (!config.isDebug) this.fadeOut();
     });
 
-    this.loadURL(config.translateUrl);
+    this.loadURL(config.translateUrl, loadURLOptions);
 
     this.webContents.addListener('crashed', console.log);
     new Promise((resolve, reject) => {
       this.webContents.addListener('did-finish-load', resolve);
       setTimeout(reject, 3000);
     }).catch(() => {
-      this.loadURL(config.translateUrlFallback);
+      this.loadURL(config.translateUrlFallback, loadURLOptions);
     });
 
     initIpcService(this);
@@ -72,5 +77,12 @@ export default class Window extends BrowserWindow {
     setTimeout(() => {
       this.hide();
     }, 200);
+  }
+  toggleDevTools() {
+    if (this.webContents.isDevToolsOpened()) {
+      this.webContents.closeDevTools();
+    } else {
+      this.webContents.openDevTools({ mode: 'undocked' });
+    }
   }
 }

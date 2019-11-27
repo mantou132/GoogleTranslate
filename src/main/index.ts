@@ -22,13 +22,6 @@ if (!config.isDebug) {
   app.dock?.hide();
 
   const menu = new Menu();
-  // 加了菜单才有 cmd + shift + i 的功能
-  menu.append(
-    new MenuItem({
-      role: 'about',
-      submenu: [{ role: 'toggleDevTools' }],
-    }),
-  );
   // 加了菜单才有 cmd + c 的功能
   menu.append(new MenuItem({ role: 'editMenu' }));
   Menu.setApplicationMenu(menu);
@@ -52,6 +45,12 @@ app.on('ready', () => {
           label: 'Quit',
           click() {
             app.exit();
+          },
+        },
+        {
+          label: 'Toggle Developer Tools',
+          click() {
+            window.toggleDevTools();
           },
         },
       ]);

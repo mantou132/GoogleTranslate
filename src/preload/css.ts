@@ -23,6 +23,8 @@ export default async () => {
       box-shadow: none !important;
     }
     ::-webkit-scrollbar,
+    .gt-md-bg,
+    .gt-md,
     .go-wrap,
     .ad-panel {
       display: none !important;
