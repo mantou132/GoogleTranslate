@@ -42,15 +42,22 @@ app.on('ready', () => {
     .on('right-click', () => {
       const contextMenu = Menu.buildFromTemplate([
         {
-          label: 'Quit',
+          label: 'Toggle Developer Tools',
           click() {
+            window.toggleDevTools();
+          },
+        },
+        {
+          label: 'Relaunch',
+          click() {
+            app.relaunch();
             app.exit();
           },
         },
         {
-          label: 'Toggle Developer Tools',
+          label: 'Quit',
           click() {
-            window.toggleDevTools();
+            app.exit();
           },
         },
       ]);
