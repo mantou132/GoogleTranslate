@@ -8,6 +8,7 @@ import config from '../config';
 import Window from './window';
 import checkForUpdates from './checkForUpdates';
 import { getSelectionText } from './utils';
+import GtTray from './tray';
 
 process.env.GOOGLE_API_KEY = 'AIzaSyB0X6iZUJXzdqBK-3TOzKIx6p14J2Eb4OU';
 
@@ -30,39 +31,7 @@ if (!config.isDebug) {
 let tray: Tray;
 app.on('ready', () => {
   const window = new Window();
-  tray = new Tray(path.resolve(__public, 'iconTemplate@2x.png'));
-  tray
-    .on('click', () => {
-      if (window.isVisible()) {
-        window.fadeOut();
-      } else {
-        window.fadeIn();
-      }
-    })
-    .on('right-click', () => {
-      const contextMenu = Menu.buildFromTemplate([
-        {
-          label: 'Toggle Developer Tools',
-          click() {
-            window.toggleDevTools();
-          },
-        },
-        {
-          label: 'Relaunch',
-          click() {
-            app.relaunch();
-            app.exit();
-          },
-        },
-        {
-          label: 'Quit',
-          click() {
-            app.exit();
-          },
-        },
-      ]);
-      tray.popUpContextMenu(contextMenu);
-    });
+  tray = new GtTray(path.resolve(__public, 'iconTemplate@2x.png'), window);
 
   globalShortcut.register('CommandOrControl+Q', async () => {
     if (!window) return;
