@@ -40,7 +40,7 @@ export default class Window extends BrowserWindow {
       minimizable: false,
       maximizable: false,
       closable: false, // 不能用常规方法退出，需要在 before-quite 中自行退出 app
-      alwaysOnTop: true,
+      alwaysOnTop: config.isDebug, // 为 false 时，在全屏 app 上显示将自动回到源工作区
       hasShadow: false,
       webPreferences: {
         webSecurity: false,
