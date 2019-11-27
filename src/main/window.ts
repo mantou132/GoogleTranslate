@@ -52,10 +52,18 @@ export default class Window extends BrowserWindow {
     });
 
     this.on('blur', () => {
-      if (!config.isDebug) this.fadeOut();
+      if (!config.isDebug && !this.webContents.isDevToolsOpened()) this.fadeOut();
     });
 
     this.loadURL(config.translateUrl, loadURLOptions);
+
+    this.webContents.addListener('devtools-opened', () => {
+      this.setAlwaysOnTop(true);
+    });
+
+    this.webContents.addListener('devtools-closed', () => {
+      this.setAlwaysOnTop(false);
+    });
 
     this.webContents.addListener('crashed', console.log);
     new Promise((resolve, reject) => {
@@ -83,7 +91,10 @@ export default class Window extends BrowserWindow {
     if (this.webContents.isDevToolsOpened()) {
       this.webContents.closeDevTools();
     } else {
-      this.webContents.openDevTools({ mode: 'undocked' });
+      this.fadeIn();
+      setTimeout(() => {
+        this.webContents.openDevTools({ mode: 'undocked' });
+      }, 200);
     }
   }
 }
