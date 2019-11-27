@@ -1,4 +1,4 @@
-import { BrowserWindow, screen } from 'electron';
+import { BrowserWindow, screen, app } from 'electron';
 
 import config from '../config';
 
@@ -76,6 +76,7 @@ export default class Window extends BrowserWindow {
     this.webContents.send('fade-out');
     setTimeout(() => {
       this.hide();
+      app.hide();
     }, 200);
   }
   toggleDevTools() {
