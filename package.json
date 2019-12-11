@@ -25,7 +25,7 @@
     "lodash": "^4.17.15",
     "node-fetch": "^2.6.0",
     "node-ipc": "^9.1.1",
-    "robotjs": "git+https://github.com/octalmage/robotjs.git"
+    "robotjs": "^0.6.0"
   },
   "devDependencies": {
     "@types/auto-launch": "^5.0.1",
