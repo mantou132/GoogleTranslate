@@ -7,13 +7,14 @@
     "strictNullChecks": true,
     "skipLibCheck": true,
     "sourceMap": true,
+    "experimentalDecorators": true,
     "module": "commonjs",
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "target": "es6",
-    "lib": ["es2018", "dom"],
+    "lib": ["es2020", "dom", "DOM.Iterable"],
     "typeRoots": ["./node_modules/@types", "./src/types"]
   },
   "include": ["src"]

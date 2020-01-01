@@ -1,15 +1,16 @@
 import path from 'path';
 
-import { app, Tray, globalShortcut, MenuItem, Menu } from 'electron';
+import { app, Tray, MenuItem, Menu } from 'electron';
 import AutoLaunch from 'auto-launch';
 
 import config from '../config';
-import { CUSTOM_EVENT } from '../consts';
+import { CUSTOM_EVENT, SHORTCUT } from '../consts';
 
 import Window from './window';
 import checkForUpdates from './checkForUpdates';
 import { getSelectionText } from './utils';
 import GtTray from './tray';
+import shortcutRegister from './shortcut';
 
 process.env.GOOGLE_API_KEY = 'AIzaSyB0X6iZUJXzdqBK-3TOzKIx6p14J2Eb4OU';
 
@@ -34,7 +35,7 @@ app.on('ready', () => {
   const window = new Window();
   tray = new GtTray(path.resolve(__public, 'iconTemplate@2x.png'), window);
 
-  globalShortcut.register('CommandOrControl+Q', async () => {
+  shortcutRegister(SHORTCUT.TRANSLATE, async () => {
     if (!window) return;
     if (window.isVisible()) {
       window.fadeOut();

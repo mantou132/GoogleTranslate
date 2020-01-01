@@ -1,4 +1,4 @@
-import { app, Tray, Menu } from 'electron';
+import { app, Tray, Menu, BrowserWindow } from 'electron';
 
 import Window from './window';
 
@@ -24,6 +24,18 @@ export default class GtTray extends Tray {
           click() {
             app.relaunch();
             app.exit();
+          },
+        },
+        {
+          label: 'Settings',
+          click() {
+            new BrowserWindow({
+              width: 360,
+              height: 150,
+              webPreferences: {
+                nodeIntegration: true,
+              },
+            }).loadURL(`file://${__dirname}/settings.html`);
           },
         },
         {

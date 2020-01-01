@@ -20,7 +20,7 @@
   "author": "mt",
   "license": "ISC",
   "dependencies": {
-    "@mantou/gem": "^0.1.12",
+    "@mantou/gem": "^0.2.18",
     "auto-launch": "^5.0.5",
     "lodash": "^4.17.15",
     "node-fetch": "^2.6.0",
@@ -47,6 +47,7 @@
     "eslint-plugin-import": "^2.18.2",
     "eslint-plugin-prettier": "^3.1.1",
     "file-loader": "^4.2.0",
+    "html-webpack-plugin": "^3.2.0",
     "husky": "^2.7.0",
     "lint-staged": "^8.2.1",
     "mkdirp": "^0.5.1",
