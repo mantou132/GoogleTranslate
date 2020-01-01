@@ -56,7 +56,7 @@ const configs: webpack.Configuration[] = [
   },
   {
     ...commonConfig,
-    entry: { renderer: './src/settings' },
+    entry: { settings: './src/settings' },
     target: 'electron-renderer',
     plugins: [
       ...(commonConfig.plugins || []),
