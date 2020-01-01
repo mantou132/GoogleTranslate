@@ -5,11 +5,8 @@
   "javascript.validate.enable": true,
   "javascript.format.enable": false,
   "typescript.tsdk": "node_modules/typescript/lib",
-  "eslint.autoFixOnSave": true,
-  "eslint.options": { "ignorePath": ".gitignore" },
-  "eslint.validate": [
-    { "language": "javascript", "autoFix": true },
-    { "language": "typescript", "autoFix": true },
-    { "language": "typescriptreact", "autoFix": true }
-  ]
+  "eslint.validate": ["javascript", "typescript", "typescriptreact"],
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  }
 }
