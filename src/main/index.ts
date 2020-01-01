@@ -4,6 +4,7 @@ import { app, Tray, globalShortcut, MenuItem, Menu } from 'electron';
 import AutoLaunch from 'auto-launch';
 
 import config from '../config';
+import { CUSTOM_EVENT } from '../consts';
 
 import Window from './window';
 import checkForUpdates from './checkForUpdates';
@@ -38,7 +39,7 @@ app.on('ready', () => {
     if (window.isVisible()) {
       window.fadeOut();
     } else {
-      window.webContents.send('translate-clipboard-text', await getSelectionText());
+      window.webContents.send(CUSTOM_EVENT.TRANSLATE, await getSelectionText());
       window.fadeIn();
     }
   });

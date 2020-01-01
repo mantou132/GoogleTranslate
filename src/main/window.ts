@@ -2,6 +2,8 @@ import { BrowserWindow, screen, app } from 'electron';
 
 import config from '../config';
 
+import { CUSTOM_EVENT } from '../consts';
+
 import { initIpcService } from './nativeMessage';
 
 const loadURLOptions = {
@@ -78,10 +80,10 @@ export default class Window extends BrowserWindow {
   fadeIn() {
     const { x, y, width, height } = Window.getRenderPosition();
     this.setBounds({ x, y, width, height });
-    this.webContents.send('fade-in');
+    this.webContents.send(CUSTOM_EVENT.WINDOW_FADEIN);
   }
   fadeOut() {
-    this.webContents.send('fade-out');
+    this.webContents.send(CUSTOM_EVENT.WINDOW_FADEOUT);
     setTimeout(() => {
       this.hide();
       app.hide();

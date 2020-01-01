@@ -1,5 +1,7 @@
 import { ipcRenderer, remote } from 'electron';
 
+import { CUSTOM_EVENT } from '../consts';
+
 const duration = 200;
 const keyframes = [
   // keyframes
@@ -11,13 +13,13 @@ const animateOptions: KeyframeAnimationOptions = {
   fill: 'forwards',
 };
 
-ipcRenderer.on('fade-in', (_: any) => {
+ipcRenderer.on(CUSTOM_EVENT.WINDOW_FADEIN, (_: any) => {
   remote.getCurrentWindow().show();
   document.body.animate(keyframes, {
     ...animateOptions,
   });
 });
-ipcRenderer.on('fade-out', (_: any) => {
+ipcRenderer.on(CUSTOM_EVENT.WINDOW_FADEOUT, (_: any) => {
   document.body.animate(keyframes, {
     ...animateOptions,
     direction: 'reverse',

@@ -11,6 +11,7 @@ import ipc from 'node-ipc';
 
 import { getTranslateString } from '../utils';
 import config from '../config';
+import { CUSTOM_EVENT } from '../consts';
 
 import Window from './window';
 
@@ -109,15 +110,16 @@ export function installNativeMessageManifest() {
 
 export function initIpcService(window: Window) {
   installNativeMessageManifest();
+  // 根据 bridge 的二进制文件名称设置 id
   ipc.config.id = config.isDebug ? 'bridge' : 'google-translate-bridge';
   ipc.config.retry = 1000;
   ipc.config.silent = true;
   ipc.serve(() =>
-    ipc.server.on('translate-text', message => {
+    ipc.server.on(CUSTOM_EVENT.TRANSLATE_REQUEST, message => {
       window.fadeIn();
 
       const originStr = getTranslateString(message);
-      window.webContents.send('translate-clipboard-text', originStr);
+      window.webContents.send(CUSTOM_EVENT.TRANSLATE, originStr);
     }),
   );
   ipc.server.start();

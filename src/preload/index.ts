@@ -1,6 +1,7 @@
 import { ipcRenderer, clipboard } from 'electron';
 
 import config from '../config';
+import { CUSTOM_EVENT } from '../consts';
 
 import textBoxHistory from './textboxhistory';
 import injectCSS from './css';
@@ -36,7 +37,7 @@ const initTranslatePage = async (opt: InitPageOption) => {
   const sourceTextAreaEle = document.querySelector(opt.sourceTextArea) as HTMLTextAreaElement;
   sourceTextAreaEle.focus();
   textBoxHistory(sourceTextAreaEle, opt.submit);
-  ipcRenderer.on('translate-clipboard-text', (_: any, arg: string) => {
+  ipcRenderer.on(CUSTOM_EVENT.TRANSLATE, (_: any, arg: string) => {
     sourceTextAreaEle.focus();
     if (!arg) return; // 没有选择的文本
     sourceTextAreaEle.value = arg;
@@ -99,7 +100,7 @@ const initTranslatePage = async (opt: InitPageOption) => {
     const zhLabelEle = document.querySelector(opt.zhLabel) as HTMLElement;
     const detectLabelEle = document.querySelector(opt.detectLabel) as HTMLElement;
 
-    ipcRenderer.on('translate-clipboard-text', (_: any, arg: string) => {
+    ipcRenderer.on(CUSTOM_EVENT.TRANSLATE, (_: any, arg: string) => {
       const { value } = sourceTextAreaEle;
       if (value === arg) return;
       sourceTextAreaEle.value = '';
