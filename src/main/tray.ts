@@ -2,6 +2,28 @@ import { app, Tray, Menu, BrowserWindow } from 'electron';
 
 import Window from './window';
 
+let settingsWindow: BrowserWindow | null = null;
+const settingsClickHandle = () => {
+  if (settingsWindow) {
+    app.show();
+    settingsWindow.show();
+    settingsWindow.moveTop();
+    settingsWindow.focus();
+  } else {
+    settingsWindow = new BrowserWindow({
+      width: 360,
+      height: 150,
+      webPreferences: {
+        nodeIntegration: true,
+      },
+    });
+    settingsWindow.on('closed', () => {
+      settingsWindow = null;
+    });
+    settingsWindow.loadURL(`file://${__dirname}/settings.html`);
+  }
+};
+
 export default class GtTray extends Tray {
   constructor(img: string, window: Window) {
     super(img);
@@ -28,15 +50,7 @@ export default class GtTray extends Tray {
         },
         {
           label: 'Settings',
-          click() {
-            new BrowserWindow({
-              width: 360,
-              height: 150,
-              webPreferences: {
-                nodeIntegration: true,
-              },
-            }).loadURL(`file://${__dirname}/settings.html`);
-          },
+          click: settingsClickHandle,
         },
         {
           label: 'Quit',
