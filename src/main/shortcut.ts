@@ -20,11 +20,14 @@ const getShortcut = (shortcut: SHORTCUT) => {
  * 当 settings 更新时重新注册
  */
 export default function register(shortcut: SHORTCUT, callback: () => void) {
+  let accelerator = getShortcut(shortcut);
   const exec = () => {
-    const accelerator = getShortcut(shortcut);
+    // 移除老绑定
     if (globalShortcut.isRegistered(accelerator)) {
       globalShortcut.unregister(accelerator);
     }
+    // 注册新绑定
+    accelerator = getShortcut(shortcut);
     globalShortcut.register(accelerator, callback);
   };
   connect(settings, exec);
