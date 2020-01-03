@@ -11,6 +11,7 @@ import checkForUpdates from './checkForUpdates';
 import { getSelectionText } from './utils';
 import GtTray from './tray';
 import shortcutRegister from './shortcut';
+import settings from './settings';
 
 process.env.GOOGLE_API_KEY = 'AIzaSyB0X6iZUJXzdqBK-3TOzKIx6p14J2Eb4OU';
 
@@ -21,7 +22,7 @@ if (!config.isDebug) {
       googleTranslateAutoLaunch.enable();
     }
   });
-  checkForUpdates();
+  if (settings.enableUpdateCheck === 'on') checkForUpdates();
   app.dock?.hide();
 
   const menu = new Menu();

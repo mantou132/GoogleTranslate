@@ -8,17 +8,20 @@ import { createStore, updateStore } from '@mantou/gem/lib/store';
 import { CUSTOM_EVENT } from '../consts';
 
 export interface Settings {
+  enableUpdateCheck: 'on' | 'off';
   translateShortcut: string;
 }
 
-const defaultSettings = {
+const defaultSettings: Settings = {
+  enableUpdateCheck: 'off',
   translateShortcut: 'CommandOrControl+Q',
 };
 
 const settingsPath = path.join(app.getPath('userData'), 'settings.json');
 const getSettings = () => {
   if (fs.existsSync(settingsPath)) {
-    return JSON.parse(fs.readFileSync(settingsPath, { encoding: 'utf8' }));
+    // settings 对象向前兼容
+    return Object.assign(defaultSettings, JSON.parse(fs.readFileSync(settingsPath, { encoding: 'utf8' })));
   } else {
     return defaultSettings;
   }

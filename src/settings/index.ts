@@ -27,6 +27,13 @@ render(
       }
     </style>
     <form @submit=${submitHandle}>
+      <!-- 未选中时值为 off，选中时转成对象后会覆盖该值 -->
+      <input name="enableUpdateCheck" type="hidden" value="off">
+      <label>
+        <input name="enableUpdateCheck" type="checkbox" value="on" ?checked=${settings.enableUpdateCheck ===
+          'on'}></input>
+        check update
+      </label>
       <fieldset>
         <legend>Shortcut</legend>
         <label>
