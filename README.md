@@ -14,7 +14,6 @@
 - 在窗口内使用快捷键：<br>
   <kbd>esc</kbd> - 关闭窗口<br>
   <kbd>enter</kbd> - Google 翻译页面聚焦到输入框<br>
-  <kbd>command</kbd> + <kbd>r</kbd> - 重载应用<br>
   <kbd>command</kbd> + <kbd>1</kbd> - 朗读源文本<br>
   <kbd>command</kbd> + <kbd>2</kbd> - 朗读翻译文本<br>
   <kbd>command</kbd> + <kbd>3</kbd> - 复制翻译文本<br>

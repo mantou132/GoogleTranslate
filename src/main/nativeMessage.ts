@@ -9,7 +9,6 @@ import { dialog, app } from 'electron';
 import mkdirp from 'mkdirp';
 import ipc from 'node-ipc';
 
-import { getTranslateString } from '../utils';
 import config from '../config';
 import { CUSTOM_EVENT } from '../consts';
 
@@ -118,8 +117,7 @@ export function initIpcService(window: Window) {
     ipc.server.on(CUSTOM_EVENT.TRANSLATE_REQUEST, message => {
       window.fadeIn();
 
-      const originStr = getTranslateString(message);
-      window.webContents.send(CUSTOM_EVENT.TRANSLATE, originStr);
+      window.webContents.send(CUSTOM_EVENT.TRANSLATE, message);
     }),
   );
   ipc.server.start();

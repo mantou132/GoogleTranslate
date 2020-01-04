@@ -1,6 +1,4 @@
-import { getTranslateString } from '../utils';
-
-import { throttle } from './utils';
+import { getTranslateString, throttle } from './utils';
 
 export default function(arg: HTMLTextAreaElement, submit?: string) {
   let isComposition = false;

@@ -1,7 +1,6 @@
 import { clipboard } from 'electron';
 import robotjs from 'robotjs';
 
-import { getTranslateString } from '../utils';
 import config from '../config';
 
 export async function getSelectionText() {
@@ -11,5 +10,5 @@ export async function getSelectionText() {
   await new Promise(resolve => setTimeout(resolve, 300));
   const newString = clipboard.readText();
   clipboard.writeText(oldString);
-  return getTranslateString(newString);
+  return newString;
 }

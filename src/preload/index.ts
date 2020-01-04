@@ -6,7 +6,7 @@ import { CUSTOM_EVENT } from '../consts';
 import textBoxHistory from './textboxhistory';
 import injectCSS from './css';
 import lang from './lang';
-import { click } from './utils';
+import { click, getTranslateString } from './utils';
 
 import './shortcut';
 import './animate';
@@ -40,7 +40,7 @@ const initTranslatePage = async (opt: InitPageOption) => {
   ipcRenderer.on(CUSTOM_EVENT.TRANSLATE, (_: any, arg: string) => {
     sourceTextAreaEle.focus();
     if (!arg) return; // 没有选择的文本
-    sourceTextAreaEle.value = arg;
+    sourceTextAreaEle.value = getTranslateString(arg);
   });
 
   window.addEventListener('keydown', e => {
@@ -106,7 +106,7 @@ const initTranslatePage = async (opt: InitPageOption) => {
       sourceTextAreaEle.value = '';
       targetLabelEle.click();
       detectLabelEle.click();
-      sourceTextAreaEle.value = value;
+      sourceTextAreaEle.value = getTranslateString(value);
     });
 
     const observer = new MutationObserver(() => {
