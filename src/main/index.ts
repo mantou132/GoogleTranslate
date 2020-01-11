@@ -23,7 +23,7 @@ if (!config.isDebug) {
     }
   });
   if (settings.enableUpdateCheck === 'on') checkForUpdates();
-  app.dock?.hide();
+  app.dock?.hide?.();
 
   const menu = new Menu();
   // 加了菜单才有 cmd + c 的功能

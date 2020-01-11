@@ -86,7 +86,7 @@ export default class Window extends BrowserWindow {
     this.webContents.send(CUSTOM_EVENT.WINDOW_FADEOUT);
     setTimeout(() => {
       this.hide();
-      app.hide();
+      app.hide?.();
     }, 200);
   }
   toggleDevTools() {

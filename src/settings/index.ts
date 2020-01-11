@@ -16,7 +16,7 @@ const submitHandle = (e: Event) => {
   const data = Object.fromEntries(fd.entries());
   ipcRenderer.sendSync(CUSTOM_EVENT.SETTINGS_CHANGE, data);
   window.close();
-  app.hide();
+  app.hide?.();
 };
 
 render(
