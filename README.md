@@ -10,7 +10,7 @@
 ## 使用方式
 
 - 安装浏览器[扩展](https://github.com/mantou132/CallGoogleTranslate)，在浏览器中选择文本，使用上下文菜单进行翻译
-- 在任意应用中选择文本，使用 <kbd>command</kbd> + <kbd>q</kbd> 进行翻译
+- 在任意应用中选择文本，默认使用 <kbd>command/ctrl</kbd> + <kbd>q</kbd> 进行翻译
 - 在窗口内使用快捷键：<br>
   <kbd>esc</kbd> - 关闭窗口<br>
   <kbd>enter</kbd> - Google 翻译页面聚焦到输入框<br>
@@ -28,25 +28,32 @@
 
 ## FAQ
 
-Q：为什么快捷键要使用 <kbd>command</kbd> + <kbd>q</kbd>？<br>
-A：个人习惯，平常会误触导致 App 被关闭
-
-Q：为什么 <kbd>command</kbd> + <kbd>q</kbd> 打开翻译窗口没有自动填充选择的文本？<br>
+Q：MacOS 下为什么 <kbd>command</kbd> + <kbd>q</kbd> 打开翻译窗口没有自动填充选择的文本？<br>
 A：可能被 OS 禁止了，试试重新为应用授权。如：<a href="./screenshot/Screen Shot 2018-11-21 at 00.57.30.png">图片</a>
 
 ## 开发
 
 ```bash
-# install rust environment
+# 安装 rust 环境
 
-# install dep
+# 安装项目依赖
 npm i
-# build rust native module
-npm run rebuild
-# serve renderer/preload
+# 将 ts 转成 js
 npm run watch
-# run electron app
-npm run start
+# 以开发模式启动项目
+npm start
+```
+
+如有网络问题不能 `build`, 可以为 `npm` 设置代理：
+
+```bash
+# 如果只有 socks 代理，需要将 socks 代理转成 http 代理
+# https://www.npmjs.com/package/http-proxy-to-socks
+hpts -s 127.0.0.1:10808 -p 1080
+
+npm config set proxy http://127.0.0.1:1080
+npm run build
+npm config delete proxy
 ```
 
 ## TODO
