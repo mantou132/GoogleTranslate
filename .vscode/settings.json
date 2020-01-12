@@ -1,11 +1,13 @@
 {
-  "editor.formatOnSave": false,
-  "typescript.validate.enable": true,
-  "typescript.format.enable": false,
   "javascript.validate.enable": true,
   "javascript.format.enable": false,
+  "typescript.validate.enable": true,
+  "typescript.format.enable": false,
   "typescript.tsdk": "node_modules/typescript/lib",
   "eslint.validate": ["javascript", "typescript", "typescriptreact"],
+  "editor.tabSize": 2,
+  "editor.renderWhitespace": "all",
+  "editor.formatOnSave": false,
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
   }

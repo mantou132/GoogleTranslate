@@ -8,11 +8,19 @@ import { promisify } from 'util';
 import { dialog, app } from 'electron';
 import mkdirp from 'mkdirp';
 import ipc from 'node-ipc';
+import regedit, { RegsValues, RegKeys } from 'regedit';
 
 import config from '../config';
 import { CUSTOM_EVENT } from '../consts';
 
 import Window from './window';
+
+const NATIVE_MANIFEST_NAME = 'google_translate_bridge';
+
+const vbsPath = config.isDebug
+  ? path.resolve(process.cwd(), `node_modules/regedit/vbs`)
+  : path.resolve(__public, 'vbs');
+regedit.setExternalVBSLocation(vbsPath);
 
 type BrowserName = 'Chrome' | 'Chromium' | 'Chrome Canary' | 'Firefox';
 
@@ -41,7 +49,7 @@ function getNativeMessageDir(browser: BrowserName) {
           return '.config/chromium/NativeMessagingHosts';
       }
     case 'win32':
-      return app.getPath('appData');
+      return app.getPath('userData');
   }
 }
 
@@ -53,21 +61,39 @@ function getNativeMessageAllowedExtension(browser: BrowserName) {
   }
 }
 
-function writeRegistryKey(browser: BrowserName, _filePath: string) {
-  // unimplement !!!
+function getNativeMessageManifestFileName(browser: BrowserName) {
+  if (browser === 'Firefox') {
+    return `${NATIVE_MANIFEST_NAME}_firefox.json`;
+  } else {
+    return `${NATIVE_MANIFEST_NAME}_chrome.json`;
+  }
+}
+
+async function writeRegistryKey(browser: BrowserName, filePath: string) {
+  const value: RegsValues = {
+    default: {
+      value: filePath,
+      type: 'REG_DEFAULT',
+    },
+  };
+  const values: RegKeys = {};
   switch (browser) {
     case 'Firefox':
-      return;
+      values['HKCU\\SOFTWARE\\Mozilla\\NativeMessagingHosts\\google_translate_bridge'] = value;
+      break;
     case 'Chrome Canary':
     case 'Chrome':
     case 'Chromium':
-      return;
+      values['HKCU\\SOFTWARE\\Google\\Chrome\\NativeMessagingHosts\\google_translate_bridge'] = value;
+      break;
   }
+  await promisify(regedit.createKey)(Object.keys(values));
+  await promisify(regedit.putValue)(values);
 }
 
 export function installNativeMessageManifest() {
   const manifest = {
-    name: 'google_translate_bridge',
+    name: NATIVE_MANIFEST_NAME,
     description: '谷歌翻译',
     path: config.isDebug
       ? path.resolve(process.cwd(), `src/bridge/target/release/bridge${config.platform === 'win32' ? '.exe' : ''}`)
@@ -78,13 +104,17 @@ export function installNativeMessageManifest() {
   const browsers: BrowserName[] = ['Chrome', 'Chrome Canary', 'Chromium', 'Firefox'];
 
   browsers.forEach(async browser => {
-    const title = 'Google 翻译添加浏览器支持失败';
+    const title = `Google 翻译添加 ${browser} 扩展支持失败`;
     const relDir = getNativeMessageDir(browser);
     if (!relDir) return;
     const absDir = path.resolve(os.homedir(), relDir);
-    const filePath = path.resolve(absDir, 'google_translate_bridge.json');
+    const filePath = path.resolve(absDir, getNativeMessageManifestFileName(browser));
     if (process.platform === 'win32') {
-      writeRegistryKey(browser, filePath);
+      try {
+        await writeRegistryKey(browser, filePath);
+      } catch (err) {
+        dialog.showErrorBox(title, `${err}\nvbsPath: ${vbsPath}\n${err.stack}`);
+      }
     }
     try {
       try {
