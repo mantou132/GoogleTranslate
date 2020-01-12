@@ -25,6 +25,7 @@ ipcRenderer.on(CUSTOM_EVENT.WINDOW_FADEOUT, (_: any) => {
     direction: 'reverse',
   }).onfinish = () => {
     // 不能在这里调用 hide，不然将导致 fade-in 的时候触发 window blur 事件
+    // https://github.com/mantou132/electron-window-hide
     // remote.getCurrentWindow().hide();
   };
 });

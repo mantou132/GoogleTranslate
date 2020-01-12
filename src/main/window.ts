@@ -42,7 +42,7 @@ export default class Window extends BrowserWindow {
       minimizable: false,
       maximizable: false,
       closable: false, // 不能用常规方法退出，需要在 before-quite 中自行退出 app
-      alwaysOnTop: config.isDebug, // 为 false 时，在全屏 app 上显示将自动回到源工作区
+      alwaysOnTop: config.platform === 'win32' ? true : config.isDebug, // 为 false 时，在全屏 app 上显示将自动回到源工作区
       hasShadow: false,
       webPreferences: {
         webSecurity: false,
@@ -83,11 +83,14 @@ export default class Window extends BrowserWindow {
     this.webContents.send(CUSTOM_EVENT.WINDOW_FADEIN);
   }
   fadeOut() {
+    // Windows blur 聚焦到上一个窗口，这里不知道什么原因要执行两次
+    this.blur();
     this.webContents.send(CUSTOM_EVENT.WINDOW_FADEOUT);
     setTimeout(() => {
+      this.blur();
       this.hide();
       app.hide?.();
-    }, 200);
+    }, 300); // 时间太短动画没有完成
   }
   toggleDevTools() {
     if (this.webContents.isDevToolsOpened()) {
