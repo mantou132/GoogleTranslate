@@ -83,11 +83,14 @@ export default class Window extends BrowserWindow {
     this.webContents.send(CUSTOM_EVENT.WINDOW_FADEIN);
   }
   fadeOut() {
+    // Windows blur 聚焦到上一个窗口，这里不知道什么原因要执行两次
+    this.blur();
     this.webContents.send(CUSTOM_EVENT.WINDOW_FADEOUT);
     setTimeout(() => {
+      this.blur();
       this.hide();
       app.hide?.();
-    }, 200);
+    }, 300); // 时间太短动画没有完成
   }
   toggleDevTools() {
     if (this.webContents.isDevToolsOpened()) {
