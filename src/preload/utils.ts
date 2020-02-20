@@ -51,7 +51,11 @@ export function frequency(fn: Function, rate = 2) {
 }
 
 export function click(ele: HTMLElement) {
+  const activeElement = document.activeElement;
   ele.dispatchEvent(new MouseEvent('mousedown'));
   ele.dispatchEvent(new MouseEvent('mouseup'));
   ele.click();
+  if (activeElement instanceof HTMLElement) {
+    activeElement.focus();
+  }
 }
