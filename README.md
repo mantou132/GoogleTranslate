@@ -5,7 +5,7 @@
   <a href="./LICENSE"><img alt="LICENSE GPL" src="https://img.shields.io/badge/license-gpl-yellow.svg?style=for-the-badge"></a>
   <a href="https://github.com/prettier/prettier"><img alt="Code Style: Prettier" src="https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=for-the-badge"></a>
 </p>
-<img alt="应用程序主界面" src="./screenshot/Screen Shot 2019-11-16 at 15.09.29.png">
+<img alt="应用程序主界面" src="./screenshot/windows.jpg">
 
 ## 使用方式
 
@@ -29,7 +29,7 @@
 ## FAQ
 
 Q：MacOS 下为什么 <kbd>command</kbd> + <kbd>q</kbd> 打开翻译窗口没有自动填充选择的文本？<br>
-A：可能被 OS 禁止了，试试重新为应用授权。如：<a href="./screenshot/Screen Shot 2018-11-21 at 00.57.30.png">图片</a>
+A：可能被 OS 禁止了，试试重新为应用授权。如：<a href="./screenshot/macos-preference.png">图片</a>
 
 ## 开发
 
