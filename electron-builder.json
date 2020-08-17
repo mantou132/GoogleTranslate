@@ -13,7 +13,7 @@
     },
     {
       "from": "src/bridge/target/release/bridge.exe",
-      "to": "./public/google-translate-bridge"
+      "to": "./public/google-translate-bridge.exe"
     },
     {
       "from": "node_modules/regedit/vbs",

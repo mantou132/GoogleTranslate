@@ -92,12 +92,13 @@ async function writeRegistryKey(browser: BrowserName, filePath: string) {
 }
 
 export function installNativeMessageManifest() {
+  const suffix = config.platform === 'win32' ? '.exe' : '';
   const manifest = {
     name: NATIVE_MANIFEST_NAME,
     description: '谷歌翻译',
     path: config.isDebug
-      ? path.resolve(process.cwd(), `src/bridge/target/release/bridge${config.platform === 'win32' ? '.exe' : ''}`)
-      : path.resolve(__public, 'google-translate-bridge'),
+      ? path.resolve(process.cwd(), `src/bridge/target/release/bridge${suffix}`)
+      : path.resolve(__public, `google-translate-bridge${suffix}`),
     type: 'stdio',
   };
 
