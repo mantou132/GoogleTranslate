@@ -18,3 +18,14 @@ declare module 'regedit' {
   };
   export default RegEdit;
 }
+declare module 'internet-available' {
+  interface Options {
+    timeout?: number;
+    retries?: number;
+    domainName?: string;
+    port?: string;
+    host?: string;
+  }
+  declare let internetAvailable: (ops: Options) => Promise<void>;
+  export default internetAvailable;
+}

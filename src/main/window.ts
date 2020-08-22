@@ -1,4 +1,6 @@
 import { BrowserWindow, screen, app } from 'electron';
+import fetch from 'node-fetch';
+import internetAvailable from 'internet-available';
 
 import config from '../config';
 
@@ -57,8 +59,6 @@ export default class Window extends BrowserWindow {
       if (!config.isDebug && !this.webContents.isDevToolsOpened()) this.fadeOut();
     });
 
-    this.loadURL(config.translateUrl, loadURLOptions);
-
     this.webContents.addListener('devtools-opened', () => {
       this.setAlwaysOnTop(true);
     });
@@ -68,20 +68,35 @@ export default class Window extends BrowserWindow {
     });
 
     this.webContents.addListener('crashed', console.log);
-    new Promise((resolve, reject) => {
-      this.webContents.addListener('did-finish-load', resolve);
-      setTimeout(reject, 3000);
-    }).catch(() => {
-      this.loadURL(config.translateUrlFallback, loadURLOptions);
-    });
+
+    internetAvailable({ retries: 3600 })
+      .then(() => {
+        return new Promise(async (resolve, reject) => {
+          setTimeout(() => reject(new Error('timeout')), 3000);
+          try {
+            const res = await fetch(config.translateUrl, { method: 'HEAD' });
+            res.ok ? resolve() : reject(new Error('fetch fail'));
+          } catch {
+            reject(new Error('network error'));
+          }
+        });
+      })
+      .then(() => {
+        this.loadURL(config.translateUrl, loadURLOptions);
+      })
+      .catch(() => {
+        this.loadURL(config.translateUrlFallback, loadURLOptions);
+      });
 
     initIpcService(this);
   }
+
   fadeIn() {
     const { x, y, width, height } = Window.getRenderPosition();
     this.setBounds({ x, y, width, height });
     this.webContents.send(CUSTOM_EVENT.WINDOW_FADEIN);
   }
+
   fadeOut() {
     // Windows blur 聚焦到上一个窗口，这里不知道什么原因要执行两次
     this.blur();
@@ -92,6 +107,7 @@ export default class Window extends BrowserWindow {
       app.hide?.();
     }, 300); // 时间太短动画没有完成
   }
+
   toggleDevTools() {
     if (this.webContents.isDevToolsOpened()) {
       this.webContents.closeDevTools();

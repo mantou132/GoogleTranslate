@@ -26,7 +26,8 @@ export default async () => {
     .gt-md-bg,
     .gt-md,
     .go-wrap,
-    .ad-panel {
+    .ad-panel,
+    .notification-area {
       display: none !important;
     }
     :focus {
