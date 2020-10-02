@@ -21,6 +21,7 @@
     }
   ],
   "mac": {
+    "extraFiles": ["./PlugIns"],
     "icon": "./public/icon.icns"
   }
 }

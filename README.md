@@ -56,6 +56,10 @@ npm run build
 npm config delete proxy
 ```
 
+### Safari Extension
+
+Safari 扩展(.appex) 需要在 [Call Google Translate](https://github.com/mantou132/CallGoogleTranslate) 构建
+
 ## TODO
 
 - 翻译指针位置的单词
