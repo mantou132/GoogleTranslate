@@ -54,18 +54,20 @@ function getNativeMessageDir(browser: BrowserName) {
 }
 
 function getNativeMessageAllowedExtension(browser: BrowserName) {
-  if (browser === 'Firefox') {
-    return { allowed_extensions: ['{fa233117-785b-4da4-a4a2-6f5312c6381b}'] };
-  } else {
-    return { allowed_origins: ['chrome-extension://hjaohjgedndjjaegicnfikppfjbboohf/'] };
+  const allowed_extensions = ['{fa233117-785b-4da4-a4a2-6f5312c6381b}'];
+  const allowed_origins = ['chrome-extension://hjaohjgedndjjaegicnfikppfjbboohf/'];
+  if (process.env.TEMP_EXT) {
+    if (process.env.TEMP_EXT.startsWith('{')) {
+      // firefox
+      allowed_extensions.push(process.env.TEMP_EXT);
+    } else {
+      allowed_origins.push(`chrome-extension://${process.env.TEMP_EXT}/`);
+    }
   }
-}
-
-function getNativeMessageManifestFileName(browser: BrowserName) {
   if (browser === 'Firefox') {
-    return `${NATIVE_MANIFEST_NAME}_firefox.json`;
+    return { allowed_extensions };
   } else {
-    return `${NATIVE_MANIFEST_NAME}_chrome.json`;
+    return { allowed_origins };
   }
 }
 
@@ -109,7 +111,7 @@ export function installNativeMessageManifest() {
     const relDir = getNativeMessageDir(browser);
     if (!relDir) return;
     const absDir = path.resolve(os.homedir(), relDir);
-    const filePath = path.resolve(absDir, getNativeMessageManifestFileName(browser));
+    const filePath = path.resolve(absDir, `${NATIVE_MANIFEST_NAME}.json`);
     if (process.platform === 'win32') {
       try {
         await writeRegistryKey(browser, filePath);
