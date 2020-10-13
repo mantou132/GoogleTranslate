@@ -21,6 +21,11 @@
     }
   ],
   "mac": {
+    "category": "public.app-category.lifestyle",
     "icon": "./public/icon.icns"
+  },
+  "linux": {
+    "target": ["AppImage"],
+    "category": "Office"
   }
 }

@@ -10,7 +10,7 @@
     "start": "nodemon --watch dist --exec \"electron ./dist --inspect\"",
     "install": "electron-rebuild",
     "build:bridge": "cargo build --release --manifest-path src/bridge/Cargo.toml",
-    "build": "npm run clean && npm run lint && cross-env NODE_ENV=production webpack && npm run build:bridge && electron-builder ./dist"
+    "build": "npm run clean && npm run lint && cross-env NODE_ENV=production webpack && npm run build:bridge"
   },
   "keywords": [
     "google",
@@ -42,8 +42,9 @@
     "@typescript-eslint/parser": "^2.6.1",
     "cross-env": "^6.0.3",
     "electron": "^7.1.2",
-    "electron-builder": "^21.2.0",
+    "electron-builder": "^22.9.1",
     "electron-rebuild": "^1.8.8",
+    "electron-updater": "^4.3.5",
     "eslint": "^6.6.0",
     "eslint-config-prettier": "^6.5.0",
     "eslint-plugin-import": "^2.18.2",

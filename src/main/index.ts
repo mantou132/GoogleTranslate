@@ -2,12 +2,12 @@ import path from 'path';
 
 import { app, Tray, MenuItem, Menu } from 'electron';
 import AutoLaunch from 'auto-launch';
+import { autoUpdater } from 'electron-updater';
 
 import config from '../config';
 import { CUSTOM_EVENT, SHORTCUT } from '../consts';
 
 import Window from './window';
-import checkForUpdates from './checkForUpdates';
 import { getSelectionText } from './utils';
 import GtTray from './tray';
 import shortcutRegister from './shortcut';
@@ -22,7 +22,6 @@ if (!config.isDebug) {
       googleTranslateAutoLaunch.enable();
     }
   });
-  if (settings.enableUpdateCheck === 'on') checkForUpdates();
   app.dock?.hide?.();
 
   const menu = new Menu();
@@ -33,6 +32,8 @@ if (!config.isDebug) {
 
 let tray: Tray;
 app.on('ready', () => {
+  if (settings.enableUpdateCheck === 'on') autoUpdater.checkForUpdatesAndNotify();
+
   const window = new Window();
   tray = new GtTray(path.resolve(__public, 'iconTemplate@2x.png'), window);
 

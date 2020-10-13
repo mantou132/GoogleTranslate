@@ -1,0 +1,35 @@
+name: Build/release
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  release:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest, windows-latest]
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+
+      - name: Install robotjs deps
+        if: matrix.os == 'ubuntu-latest'
+        run: sudo apt-get install libxtst-dev libpng++-dev
+
+      - name: Install Node.js, NPM and Yarn
+        uses: actions/setup-node@v2-beta
+        with:
+          node-version: '14'
+
+      - name: Build/release Electron app
+        uses: samuelmeuli/action-electron-builder@v1
+        with:
+          github_token: ${{ secrets.github_token }}
+          release: ${{ startsWith(github.ref, 'refs/tags/') }}
