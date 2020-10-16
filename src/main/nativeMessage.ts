@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/camelcase */
 import process from 'process';
 import os from 'os';
 import path from 'path';
@@ -49,11 +48,17 @@ function getNativeMessageDir(browser: BrowserName) {
           return '.config/chromium/NativeMessagingHosts';
       }
     case 'win32':
-      return app.getPath('userData');
+      // 位置在注册表指定
+      return path.resolve(
+        app.getPath('userData'),
+        'NativeMessagingHosts',
+        browser === 'Firefox' ? 'Firefox' : 'Chrome',
+      );
   }
 }
 
 function getNativeMessageAllowedExtension(browser: BrowserName) {
+  /* eslint-disable @typescript-eslint/camelcase */
   const allowed_extensions = ['{fa233117-785b-4da4-a4a2-6f5312c6381b}'];
   const allowed_origins = ['chrome-extension://hjaohjgedndjjaegicnfikppfjbboohf/'];
   if (process.env.TEMP_EXT) {

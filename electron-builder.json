@@ -20,6 +20,10 @@
       "to": "./public/vbs"
     }
   ],
+  "publish": {
+    "provider": "github",
+    "vPrefixedTagName": false
+  },
   "win": {
     "icon": "./public/icon.png"
   },
