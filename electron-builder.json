@@ -20,12 +20,15 @@
       "to": "./public/vbs"
     }
   ],
+  "win": {
+    "icon": "./public/icon.png"
+  },
   "mac": {
-    "category": "public.app-category.lifestyle",
-    "icon": "./public/icon.icns"
+    "category": "public.app-category.utilities",
+    "icon": "./public/icon.png"
   },
   "linux": {
     "target": ["AppImage"],
-    "category": "Office"
+    "category": "Utility"
   }
 }
