@@ -32,7 +32,7 @@
     "icon": "./public/icon.png"
   },
   "linux": {
-    "target": ["AppImage"],
+    "target": ["AppImage", "snap"],
     "category": "Utility"
   }
 }

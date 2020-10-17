@@ -19,14 +19,20 @@ jobs:
         with:
           submodules: true
 
-      - name: Install robotjs deps
-        if: matrix.os == 'ubuntu-latest'
-        run: sudo apt-get install libxtst-dev libpng++-dev
-
       - name: Install Node.js, NPM and Yarn
         uses: actions/setup-node@v2-beta
         with:
           node-version: '14'
+
+      - name: Install robotjs
+        if: startsWith(matrix.os, 'ubuntu')
+        run: sudo apt-get install libxtst-dev libpng++-dev
+
+      - name: Install and login Snapcraft
+        uses: samuelmeuli/action-snapcraft@v1
+        if: startsWith(matrix.os, 'ubuntu')
+        with:
+          snapcraft_token: ${{ secrets.snapcraft_token }}
 
       - name: Build/release Electron app
         uses: samuelmeuli/action-electron-builder@v1
