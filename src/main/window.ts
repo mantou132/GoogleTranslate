@@ -1,5 +1,4 @@
 import { BrowserWindow, screen, app } from 'electron';
-import fetch from 'node-fetch';
 import internetAvailable from 'internet-available';
 
 import config from '../config';
@@ -72,13 +71,17 @@ export default class Window extends BrowserWindow {
     internetAvailable({ retries: 3600 })
       .then(() => {
         return new Promise(async (resolve, reject) => {
-          setTimeout(() => reject(new Error('timeout')), 3000);
-          try {
-            const res = await fetch(config.translateUrl, { method: 'HEAD' });
-            res.ok ? resolve() : reject(new Error('fetch fail'));
-          } catch {
-            reject(new Error('network error'));
-          }
+          // https://github.com/electron/electron/issues/20357
+          const testWindow = new BrowserWindow({ show: false });
+          testWindow.loadURL(config.translateUrl);
+          const timer = setTimeout(() => {
+            testWindow.close();
+            reject(new Error('timeout'));
+          }, 3000);
+          testWindow.webContents.on('dom-ready', () => {
+            resolve();
+            clearTimeout(timer);
+          });
         });
       })
       .then(() => {
