@@ -30,6 +30,11 @@ if (!config.isDebug) {
   Menu.setApplicationMenu(menu);
 }
 
+const gotTheLock = app.requestSingleInstanceLock();
+if (!gotTheLock) {
+  app.quit();
+}
+
 let tray: Tray;
 app.on('ready', () => {
   if (settings.enableUpdateCheck === 'on') autoUpdater.checkForUpdatesAndNotify();

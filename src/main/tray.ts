@@ -55,7 +55,7 @@ export default class GtTray extends Tray {
         {
           label: 'Quit',
           click() {
-            app.exit();
+            app.quit();
           },
         },
       ]);
