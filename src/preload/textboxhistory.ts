@@ -1,4 +1,4 @@
-import { getTranslateString, throttle } from './utils';
+import { getTranslateString, throttle, dispatchInputEvent } from './utils';
 
 export default function(arg: HTMLTextAreaElement, submit?: string) {
   let isComposition = false;
@@ -34,12 +34,14 @@ export default function(arg: HTMLTextAreaElement, submit?: string) {
       valueHistory.currentPosition -= 1;
       textarea.value = valueHistory.historyValuePool[valueHistory.currentPosition];
     }
+    dispatchInputEvent(textarea);
   }
 
   function redo() {
     if (valueHistory.currentPosition + 1 < valueHistory.historyValuePool.length) {
       valueHistory.currentPosition += 1;
       textarea.value = valueHistory.historyValuePool[valueHistory.currentPosition];
+      dispatchInputEvent(textarea);
     }
   }
   const throttleAddValueToHistory = throttle(addValueToHistory, 1000);
@@ -87,6 +89,7 @@ export default function(arg: HTMLTextAreaElement, submit?: string) {
 
       const originStr = getTranslateString(newString);
       textarea.value = originStr;
+      dispatchInputEvent(textarea);
       addValueToHistory(originStr);
     }
   });

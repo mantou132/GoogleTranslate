@@ -6,12 +6,12 @@ import { CUSTOM_EVENT } from '../consts';
 import textBoxHistory from './textboxhistory';
 import injectCSS from './css';
 import lang from './lang';
-import { click, getTranslateString } from './utils';
+import { click, getTranslateString, dispatchInputEvent } from './utils';
 
 import './shortcut';
 import './animate';
 
-interface InitPageOption {
+export interface InitPageOption {
   sourceTextArea: string;
   responseContainer: string;
   sourceTTS: string;
@@ -21,11 +21,11 @@ interface InitPageOption {
   signOut: string;
 
   submit?: string;
-  sourceLabel?: string;
-  targetLabel?: string;
-  detectLabel?: string;
-  enLabel?: string;
-  zhLabel?: string;
+  sourceCurrentLabel?: string;
+  sourceDetectLabel?: string;
+  targetCurrentLabel?: string;
+  targetENLabel?: string;
+  targetZHCNLabel?: string;
   starButton?: string;
 }
 
@@ -41,6 +41,7 @@ const initTranslatePage = async (opt: InitPageOption) => {
     sourceTextAreaEle.focus();
     if (!arg) return; // 没有选择的文本
     sourceTextAreaEle.value = getTranslateString(arg);
+    dispatchInputEvent(sourceTextAreaEle);
   });
 
   window.addEventListener('keydown', e => {
@@ -92,40 +93,46 @@ const initTranslatePage = async (opt: InitPageOption) => {
     }
   });
 
-  if (opt.sourceLabel && opt.targetLabel && opt.enLabel && opt.zhLabel && opt.detectLabel) {
+  if (
+    opt.sourceCurrentLabel &&
+    opt.sourceDetectLabel &&
+    opt.targetCurrentLabel &&
+    opt.targetENLabel &&
+    opt.targetZHCNLabel
+  ) {
     const i18n = lang();
-    const sourceLabelEle = document.querySelector(opt.sourceLabel) as HTMLElement;
-    const targetLabelEle = document.querySelector(opt.targetLabel) as HTMLElement;
-    const enLabelEle = document.querySelector(opt.enLabel) as HTMLElement;
-    const zhLabelEle = document.querySelector(opt.zhLabel) as HTMLElement;
-    const detectLabelEle = document.querySelector(opt.detectLabel) as HTMLElement;
+    const sourceCurrentLabelEle = document.querySelector(opt.sourceCurrentLabel) as HTMLElement;
+    const sourceDetectLabelEle = document.querySelector(opt.sourceDetectLabel) as HTMLElement;
+    const targetCurrentLabelEle = document.querySelector(opt.targetCurrentLabel) as HTMLElement;
+    const targetENLabelEle = document.querySelector(opt.targetENLabel) as HTMLElement;
+    const targetZHCNLabelEle = document.querySelector(opt.targetZHCNLabel) as HTMLElement;
+
+    sourceDetectLabelEle.click();
 
     ipcRenderer.on(CUSTOM_EVENT.TRANSLATE, (_: any, arg: string) => {
       const { value } = sourceTextAreaEle;
       if (value === arg) return;
       sourceTextAreaEle.value = '';
-      targetLabelEle.click();
-      detectLabelEle.click();
+      sourceDetectLabelEle.click();
       sourceTextAreaEle.value = getTranslateString(value);
+      dispatchInputEvent(sourceTextAreaEle);
     });
 
     const observer = new MutationObserver(() => {
-      const sourceMatch = sourceLabelEle.textContent?.match(i18n.detectReg);
-      const sourceStr = sourceMatch ? sourceMatch[1] : '';
-      const targetStr = targetLabelEle.textContent;
+      const sourceStr = sourceCurrentLabelEle.textContent?.match(i18n.detectReg)?.[1];
+      const targetStr = targetCurrentLabelEle.textContent;
       if (sourceStr && targetStr?.includes(sourceStr)) {
-        targetLabelEle.click();
         if (sourceStr === i18n.detectZh) {
-          enLabelEle.click();
+          targetENLabelEle.click();
         } else {
-          zhLabelEle.click();
+          targetZHCNLabelEle.click();
         }
       }
     });
-    observer.observe(sourceLabelEle, {
-      attributes: false,
+    observer.observe(sourceCurrentLabelEle, {
+      subtree: true,
       childList: true,
-      subtree: false,
+      characterData: true,
     });
   }
 };
@@ -134,19 +141,21 @@ const { href } = window.location;
 if (href.startsWith(config.translateUrl) || href.startsWith(config.translateUrlFallback)) {
   injectCSS();
   initTranslatePage({
-    sourceTextArea: '#source',
-    responseContainer: '.tlid-translation',
-    sourceTTS: '.src-tts',
-    responseTTS: '.res-tts',
-    responseCopy: '.copybutton',
-    starButton: '.starbutton',
+    sourceTextArea: 'textarea[aria-autocomplete="list"]',
+    responseContainer: '[role="region"] > [jsaction][jsname] > [data-language] > div > span[lang][jsaction][jsname]',
+    sourceTTS: 'div[data-enable-toggle-playback-speed][data-location="1"] > button[aria-label][jscontroller][jsname]',
+    responseTTS: 'div[data-enable-toggle-playback-speed][data-location="2"] > button[aria-label][jscontroller][jsname]',
+    responseCopy: 'div[data-enable-toggle-playback-speed][data-location="2"] + button',
+    starButton: '[data-saved-translation-limit-reached] > button[aria-pressed]',
     signIn: 'a[href*="https://accounts.google.com/ServiceLogin"]',
     signOut: 'a[href*="https://accounts.google.com/Logout"]',
-    sourceLabel: '.tlid-open-small-source-language-list',
-    targetLabel: '.tlid-open-small-target-language-list',
-    detectLabel: '[onclick*=sl_list_auto]',
-    enLabel: '[onclick*=tl_list_en]',
-    zhLabel: '[onclick*=tl_list_zh-CN]',
+    sourceCurrentLabel: 'h1#i5 + div > div > c-wiz[jsmodel] > div[jsname][role="button"]:nth-of-type(1)',
+    sourceDetectLabel: 'div[data-auto-open-search] > div > div> div div[data-language-code="auto"]',
+    targetCurrentLabel: 'h1#i5 + div > div > c-wiz[jsmodel] > div[jsname][role="button"]:nth-of-type(3)',
+    targetENLabel:
+      'h1#i5 + div + div + div > c-wiz > div:nth-of-type(2) > div[data-auto-open-search] > div > div> div div[data-language-code="en"]',
+    targetZHCNLabel:
+      'h1#i5 + div + div + div > c-wiz > div:nth-of-type(2) > div[data-auto-open-search] > div > div> div div[data-language-code="zh-CN"]',
   });
   ipcRenderer.sendToHost('header-background-change', 'white');
 } else {

@@ -59,3 +59,7 @@ export function click(ele: HTMLElement) {
     activeElement.focus();
   }
 }
+
+export function dispatchInputEvent(ele: HTMLElement) {
+  ele.dispatchEvent(new InputEvent('input', { bubbles: true, composed: true }));
+}
