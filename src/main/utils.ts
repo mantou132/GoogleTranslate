@@ -8,8 +8,21 @@ export async function delay(time: number) {
 }
 
 export async function getSelectionText() {
-  const oldString = clipboard.readText();
-  clipboard.writeText('');
+  function restoreContent() {
+    const oldString = clipboard.readHTML();
+    const oldImage = clipboard.readImage();
+    clipboard.writeHTML('');
+    if (!oldImage.isEmpty()) {
+      return () => clipboard.writeImage(oldImage);
+    }
+    if (oldString) {
+      return () => clipboard.writeHTML(oldString);
+    }
+    return () => {
+      //
+    };
+  }
+  const restore = restoreContent();
   // window 平台下，ctrl+q 调用此函数时如果 ctrl 弹起的早则会输入 'c'
   if (config.platform === 'win32') {
     await delay(200);
@@ -20,6 +33,6 @@ export async function getSelectionText() {
     await delay(300);
   }
   const newString = clipboard.readText();
-  clipboard.writeText(oldString);
+  restore();
   return newString;
 }
