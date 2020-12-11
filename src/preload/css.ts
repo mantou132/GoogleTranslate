@@ -10,12 +10,15 @@ export default async () => {
   const style = document.createElement('style');
   style.innerText = css`
     header,
+    /* header */
     body > c-wiz > div:first-child > div:first-child {
       margin-top: -1px !important;
       height: 0 !important;
       overflow: hidden !important;
       padding: 0 !important;
+      border: none !important;
     }
+    /* textarea */
     c-wiz c-wiz c-wiz c-wiz > h2 ~ span > span > div,
     c-wiz c-wiz c-wiz c-wiz > h2 ~ span > span > div > div:last-child {
       max-height: none !important;
@@ -25,6 +28,9 @@ export default async () => {
       box-shadow: none !important;
     }
     ::-webkit-scrollbar,
+    /* share button */
+    div[data-enable-toggle-playback-speed][data-location='2'] ~ span,
+    /* ad */
     h1#i5 + div c-wiz > h2 ~ div[jsaction] > div[aria-label],
     body > c-wiz nav + div {
       display: none !important;
@@ -36,6 +42,7 @@ export default async () => {
       background: transparent !important;
       transform: translateX(100%) !important;
     }
+    /* main */
     body > c-wiz[view] {
       overflow: auto;
       height: 100vh !important;
