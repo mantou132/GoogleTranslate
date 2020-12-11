@@ -1,6 +1,6 @@
 {
   "name": "google-translate",
-  "version": "4.1.11",
+  "version": "4.1.12",
   "description": "google translate, work in any app",
   "main": "./dist/index.js",
   "scripts": {
