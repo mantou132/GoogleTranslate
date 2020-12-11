@@ -1,4 +1,4 @@
-import { ipcRenderer, clipboard } from 'electron';
+import { ipcRenderer } from 'electron';
 
 import config from '../config';
 import { CUSTOM_EVENT } from '../consts';
@@ -13,7 +13,6 @@ import './animate';
 
 export interface InitPageOption {
   sourceTextArea: string;
-  responseContainer: string;
   sourceTTS: string;
   responseTTS: string;
   responseCopy: string;
@@ -66,11 +65,8 @@ const initTranslatePage = async (opt: InitPageOption) => {
     }
     // command + 3
     if (e.keyCode === 51 && !e.altKey && (e.metaKey || e.ctrlKey)) {
-      const responseContainerEle = document.querySelector(opt.responseContainer);
       const responseCopyEle = document.querySelector(opt.responseCopy) as HTMLElement | null;
-      const response = responseContainerEle && responseContainerEle.textContent?.trim();
-      if (response && responseCopyEle) {
-        clipboard.writeText(response);
+      if (responseCopyEle) {
         click(responseCopyEle);
       }
     }
@@ -142,7 +138,6 @@ if (href.startsWith(config.translateUrl) || href.startsWith(config.translateUrlF
   injectCSS();
   initTranslatePage({
     sourceTextArea: 'textarea[aria-autocomplete="list"]',
-    responseContainer: '[role="region"] > [jsaction][jsname] > [data-language] > div > span[lang][jsaction][jsname]',
     sourceTTS: 'div[data-enable-toggle-playback-speed][data-location="1"] > button[aria-label][jscontroller][jsname]',
     responseTTS: 'div[data-enable-toggle-playback-speed][data-location="2"] > button[aria-label][jscontroller][jsname]',
     responseCopy: 'div[data-enable-toggle-playback-speed][data-location="2"] + button',

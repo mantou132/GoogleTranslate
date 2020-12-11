@@ -56,7 +56,7 @@ export function click(ele: HTMLElement) {
   ele.dispatchEvent(new MouseEvent('mouseup'));
   ele.click();
   if (activeElement instanceof HTMLElement) {
-    activeElement.focus();
+    setTimeout(() => activeElement.focus(), 1000);
   }
 }
 
