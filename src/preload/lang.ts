@@ -1,5 +1,6 @@
 export default () => {
-  if ((document.documentElement as HTMLElement).lang === 'zh-CN') {
+  const { lang } = document.documentElement;
+  if (lang === 'zh') {
     return {
       detectReg: /检测到(.*)/,
       detectZh: '中文',
