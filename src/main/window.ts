@@ -68,9 +68,9 @@ export default class Window extends BrowserWindow {
 
     this.webContents.addListener('crashed', console.log);
 
-    internetAvailable({ retries: 3600 })
+    internetAvailable({ timeout: 1000, retries: 5, port: '53', host: '114.114.114.114', domainName: 'google.com' })
       .then(() => {
-        return new Promise(async (resolve, reject) => {
+        return new Promise((resolve, reject) => {
           // https://github.com/electron/electron/issues/20357
           const testWindow = new BrowserWindow({ show: false });
           testWindow.loadURL(config.translateUrl);
