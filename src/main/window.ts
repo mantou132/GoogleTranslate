@@ -79,7 +79,7 @@ export default class Window extends BrowserWindow {
             reject(new Error('timeout'));
           }, 3000);
           testWindow.webContents.on('dom-ready', () => {
-            resolve();
+            resolve(null);
             clearTimeout(timer);
           });
         });

@@ -34,6 +34,8 @@ A：可能被 OS 禁止了，试试重新为应用授权。如：<a href="./scre
 ## 开发
 
 ```bash
+# 同步子模块
+git submodule update --remote --init
 # 安装 rust 环境
 
 # 安装项目依赖

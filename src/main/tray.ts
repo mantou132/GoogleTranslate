@@ -12,7 +12,7 @@ const settingsClickHandle = () => {
   } else {
     settingsWindow = new BrowserWindow({
       width: 360,
-      height: 150,
+      height: 216,
       webPreferences: {
         nodeIntegration: true,
       },

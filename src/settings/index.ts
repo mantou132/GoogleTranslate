@@ -3,6 +3,7 @@ import { html, render } from '@mantou/gem';
 
 import { CUSTOM_EVENT } from '../consts';
 import { Settings } from '../main/settings';
+import { version } from '../../package.json';
 
 const translateShortcutList = ['CommandOrControl+Q', 'CommandOrControl+T', 'CommandOrControl+F'];
 
@@ -22,10 +23,14 @@ const submitHandle = (e: Event) => {
 render(
   html`
     <style>
-      .action {
+      .action, fieldset {
         margin-block-start: 1em;
       }
+      .version {
+        margin-block-end: 1em;
+      }
     </style>
+    <div class="version">Version ${version}</div>
     <form @submit=${submitHandle}>
       <!-- 未选中时值为 off，选中时转成对象后会覆盖该值 -->
       <input name="enableUpdateCheck" type="hidden" value="off">
