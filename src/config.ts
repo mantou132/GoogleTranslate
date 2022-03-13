@@ -3,5 +3,5 @@ export default {
   isDebug: process.env.NODE_ENV !== 'production',
   translateUrl: 'https://translate.google.com',
   translateUrlFallback: 'https://translate.google.cn',
-  repoRawURL: 'https://raw.githubusercontent.com/mantou132/GoogleTranslate/master/src/preload/config.js',
+  repoRawURL: 'https://raw.githubusercontent.com/mantou132/GoogleTranslate/master/src/preload/config.json',
 };

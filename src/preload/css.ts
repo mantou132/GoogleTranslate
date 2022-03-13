@@ -30,6 +30,8 @@ export default async () => {
     ::-webkit-scrollbar,
     /* share button */
     div[data-enable-toggle-playback-speed][data-location='2'] ~ span,
+    /* translate arrow */
+    c-wiz c-wiz c-wiz c-wiz > h2 ~ div > div[aria-label="Translate"],
     /* ad */
     h1#i5 + div c-wiz > h2 ~ div[jsaction] > div[aria-label],
     /* translate website */

@@ -10,7 +10,8 @@
     "start": "nodemon --watch dist --exec \"electron ./dist --inspect\"",
     "install": "electron-rebuild",
     "build:bridge": "cargo build --release --manifest-path src/bridge/Cargo.toml",
-    "build": "npm run clean && npm run lint && cross-env NODE_ENV=production webpack && npm run build:bridge"
+    "build": "npm run clean && npm run lint && cross-env NODE_ENV=production webpack && npm run build:bridge",
+    "release": "npx release patch"
   },
   "keywords": [
     "google",
