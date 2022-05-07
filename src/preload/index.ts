@@ -29,10 +29,12 @@ export interface InitPageOption {
   starButton?: string;
 }
 
+const ready = new Promise(resolve => {
+  window.addEventListener('load', resolve);
+});
+
 const initTranslatePage = async (opt: InitPageOption) => {
-  await new Promise(resolve => {
-    window.addEventListener('load', resolve);
-  });
+  await ready;
 
   const sourceTextAreaEle = document.querySelector(opt.sourceTextArea) as HTMLTextAreaElement;
   sourceTextAreaEle.focus();
@@ -131,7 +133,7 @@ const { href } = window.location;
 if (href.startsWith(config.translateUrl) || href.startsWith(config.translateUrlFallback)) {
   injectCSS();
   ipcRenderer.sendToHost('header-background-change', 'white');
-  fetch(config.repoRawURL)
+  fetch(`${config.repoRawURL}?t=${Date.now()}`)
     .then(async res => {
       if (!res.ok) throw new Error();
       initTranslatePage((await res.json()) as typeof localConfig);
