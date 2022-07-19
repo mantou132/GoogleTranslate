@@ -1,14 +1,14 @@
 {
   "sourceTextArea": "textarea[aria-autocomplete=\"list\"]",
-  "sourceTTS": "div[data-enable-toggle-playback-speed][data-location=\"1\"] > button[aria-label][jscontroller][jsname]",
-  "responseTTS": "div[data-enable-toggle-playback-speed][data-location=\"2\"] > button[aria-label][jscontroller][jsname]",
-  "responseCopy": "div[data-enable-toggle-playback-speed][data-location=\"2\"] + button",
-  "starButton": "[data-saved-translation-limit-reached] > button[aria-pressed]",
+  "sourceTTS": "div[data-enable-toggle-playback-speed][data-location=\"1\"] button[aria-label][jscontroller][jsname]",
+  "responseTTS": "div[data-enable-toggle-playback-speed][data-location=\"2\"] button[aria-label][jscontroller][jsname]",
+  "responseCopy": "div[data-enable-toggle-playback-speed][data-location=\"2\"] ~ button:not([aria-haspopup])",
+  "starButton": "[data-saved-translation-limit-reached] button[aria-pressed]",
   "signIn": "a[href*=\"https://accounts.google.com/ServiceLogin\"]",
   "signOut": "a[href*=\"https://accounts.google.com/Logout\"]",
   "sourceDetectLabel": "div[data-auto-open-search] > div > div> div div[data-language-code=\"auto\"]",
   "sourceCurrentLabel": "h1 + div > div > c-wiz[jsmodel] > div > c-wiz > div:nth-of-type(1)",
-  "targetCurrentLabel": "h1 + div > div > c-wiz[jsmodel] > div > c-wiz > div:nth-of-type(3)",
+  "targetCurrentLabel": "h1 + div > div > c-wiz[jsmodel] > div > c-wiz > div:nth-of-type(4)",
   "targetENLabel": "h1 + div > div > c-wiz[jsmodel] > div > c-wiz > div:nth-of-type(2) > div[data-auto-open-search] > div > div> div div[data-language-code=\"en\"]",
   "targetZHCNLabel": "h1 + div > div > c-wiz[jsmodel] > div > c-wiz > div:nth-of-type(2) > div[data-auto-open-search] > div > div> div div[data-language-code=\"zh-CN\"]"
 }
