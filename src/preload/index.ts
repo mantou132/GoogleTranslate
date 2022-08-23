@@ -114,7 +114,7 @@ const initTranslatePage = async (opt: InitPageOption) => {
       const sourceStr = sourceCurrentLabelEle.textContent?.match(i18n.detectReg)?.[1];
       const targetStr = targetCurrentLabelEle.textContent;
       if (sourceStr && targetStr?.includes(sourceStr)) {
-        if (sourceStr === i18n.detectZh) {
+        if (sourceStr.startsWith(i18n.detectZh)) {
           targetENLabelEle.click();
         } else {
           targetZHCNLabelEle.click();

@@ -2,7 +2,6 @@ import { BrowserWindow, screen, app } from 'electron';
 import internetAvailable from 'internet-available';
 
 import config from '../config';
-
 import { CUSTOM_EVENT } from '../consts';
 
 import { initIpcService } from './nativeMessage';
@@ -66,6 +65,7 @@ export default class Window extends BrowserWindow {
       this.setAlwaysOnTop(false);
     });
 
+    // eslint-disable-next-line no-console
     this.webContents.addListener('crashed', console.log);
 
     internetAvailable({ timeout: 1000, retries: 5, port: '53', host: '114.114.114.114', domainName: 'google.com' })

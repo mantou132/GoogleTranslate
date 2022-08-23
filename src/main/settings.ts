@@ -2,7 +2,6 @@ import path from 'path';
 import fs from 'fs';
 
 import { ipcMain, app } from 'electron';
-
 import { createStore, updateStore } from '@mantou/gem/lib/store';
 
 import { CUSTOM_EVENT } from '../consts';

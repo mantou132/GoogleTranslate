@@ -58,7 +58,6 @@ function getNativeMessageDir(browser: BrowserName) {
 }
 
 function getNativeMessageAllowedExtension(browser: BrowserName) {
-  /* eslint-disable @typescript-eslint/camelcase */
   const allowed_extensions = ['{fa233117-785b-4da4-a4a2-6f5312c6381b}'];
   const allowed_origins = ['chrome-extension://hjaohjgedndjjaegicnfikppfjbboohf/'];
   if (process.env.TEMP_EXT) {

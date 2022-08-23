@@ -1,0 +1,28 @@
+name: Test
+
+on:
+  schedule:
+    # * is a special character in YAML so you have to quote this string
+    - cron:  '40 7,19 * * *'
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: macos-latest
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+
+      - name: Install Node.js, NPM and Yarn
+        uses: actions/setup-node@v2-beta
+        with:
+          node-version: '14'
+
+      - name: Install deps
+        run: npm i --ignore-scripts && npm i -D puppeteer
+
+      - name: Test
+        run: npm run test
