@@ -37,7 +37,11 @@ if (!gotTheLock) {
 
 let tray: Tray;
 app.on('ready', () => {
-  if (settings.enableUpdateCheck === 'on') autoUpdater.checkForUpdatesAndNotify();
+  if (settings.enableUpdateCheck === 'on') {
+    autoUpdater.checkForUpdatesAndNotify().catch(() => {
+      //
+    });
+  }
 
   const window = new Window();
   tray = new GtTray(path.resolve(__public, 'iconTemplate@2x.png'), window);
