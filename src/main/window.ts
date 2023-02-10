@@ -78,9 +78,12 @@ export default class Window extends BrowserWindow {
             testWindow.close();
             reject(new Error('timeout'));
           }, 3000);
-          testWindow.webContents.on('dom-ready', () => {
-            resolve(null);
-            clearTimeout(timer);
+          testWindow.webContents.on('page-title-updated', (_evt, _title, explicitSet) => {
+            if (explicitSet) {
+              testWindow.close();
+              resolve(null);
+              clearTimeout(timer);
+            }
           });
         });
       })
