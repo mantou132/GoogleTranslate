@@ -11,7 +11,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-latest, windows-2019]
+        os: [macos-12, ubuntu-20.04, windows-2019]
 
     steps:
       - name: Check out Git repository
@@ -28,11 +28,12 @@ jobs:
         if: startsWith(matrix.os, 'ubuntu')
         run: sudo apt-get install libxtst-dev libpng++-dev
 
-      - name: Install and login Snapcraft
-        uses: samuelmeuli/action-snapcraft@v1
-        if: startsWith(matrix.os, 'ubuntu')
-        with:
-          snapcraft_token: ${{ secrets.snapcraft_token }}
+      # Credentials are no longer valid for the Snap Store.
+      # - name: Install and login Snapcraft
+      #   uses: samuelmeuli/action-snapcraft@v1
+      #   if: startsWith(matrix.os, 'ubuntu')
+      #   with:
+      #     snapcraft_token: ${{ secrets.snapcraft_token }}
 
       - name: Build/release Electron app
         uses: samuelmeuli/action-electron-builder@v1
