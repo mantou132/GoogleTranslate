@@ -7,7 +7,7 @@ export default () => {
     };
   }
   return {
-    detectReg: /(.*) - detected/,
+    detectReg: /(.*) - detected/i,
     detectZh: 'Chinese',
   };
 };
