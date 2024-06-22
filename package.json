@@ -1,6 +1,6 @@
 {
   "name": "google-translate",
-  "version": "4.1.31",
+  "version": "4.1.32",
   "description": "google translate, work in any app",
   "main": "./dist/index.js",
   "scripts": {
@@ -44,7 +44,7 @@
     "@typescript-eslint/eslint-plugin": "^4.25.0",
     "@typescript-eslint/parser": "^4.25.0",
     "cross-env": "^6.0.3",
-    "electron": "^7.1.2",
+    "electron": "^7.3.3",
     "electron-builder": "^22.9.1",
     "electron-rebuild": "^1.8.8",
     "eslint": "^7.27.0",

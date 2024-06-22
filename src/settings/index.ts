@@ -6,6 +6,7 @@ import { Settings } from '../main/settings';
 import { version } from '../../package.json';
 
 const translateShortcutList = ['CommandOrControl+Q', 'CommandOrControl+T', 'CommandOrControl+F'];
+const copyModifierList = ['auto', 'control', 'command', 'alt'];
 
 document.title = 'Settings';
 
@@ -40,13 +41,23 @@ render(
         check update
       </label>
       <fieldset>
-        <legend>Shortcut</legend>
+        <legend>Keys</legend>
         <label>
           translate selection text:
           <select name="translateShortcut">
             ${translateShortcutList.map(
               shortcut => html`
                 <option value=${shortcut} ?selected=${settings.translateShortcut === shortcut}>${shortcut}</option>
+              `,
+            )}
+          </select>
+        </label>
+        <label>
+          copy modifier:
+          <select name="copyModifier">
+            ${copyModifierList.map(
+              key => html`
+                <option value=${key} ?selected=${settings.copyModifier === key}>${key}</option>
               `,
             )}
           </select>

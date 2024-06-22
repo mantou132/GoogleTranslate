@@ -9,11 +9,13 @@ import { CUSTOM_EVENT } from '../consts';
 export interface Settings {
   enableUpdateCheck: 'on' | 'off';
   translateShortcut: string;
+  copyModifier: 'auto' | 'control' | 'command' | 'alt';
 }
 
 const defaultSettings: Settings = {
   enableUpdateCheck: 'off',
   translateShortcut: 'CommandOrControl+Q',
+  copyModifier: 'auto',
 };
 
 const settingsPath = path.join(app.getPath('userData'), 'settings.json');

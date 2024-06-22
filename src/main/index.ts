@@ -51,7 +51,7 @@ app.on('ready', () => {
     if (window.isVisible()) {
       window.fadeOut();
     } else {
-      window.webContents.send(CUSTOM_EVENT.TRANSLATE, await getSelectionText());
+      window.webContents.send(CUSTOM_EVENT.TRANSLATE, await getSelectionText(settings.copyModifier));
       window.fadeIn();
     }
   });
