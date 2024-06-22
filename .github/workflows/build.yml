@@ -11,7 +11,8 @@ jobs:
 
     strategy:
       matrix:
-        os: [macos-11, ubuntu-20.04, windows-2019]
+        # os: [macos-11, ubuntu-20.04, windows-2019]
+        os: [ubuntu-20.04, windows-2019]
 
     steps:
       - name: Check out Git repository
@@ -23,9 +24,6 @@ jobs:
         uses: actions/setup-node@v2-beta
         with:
           node-version: '14'
-
-      - name: Update node-gyp
-        run: npm install -g node-gyp
 
       - name: Install robotjs
         if: startsWith(matrix.os, 'ubuntu')
