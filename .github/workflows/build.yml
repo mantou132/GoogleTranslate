@@ -22,7 +22,7 @@ jobs:
       - name: Install Node.js, NPM and Yarn
         uses: actions/setup-node@v2-beta
         with:
-          node-version: '14'
+          node-version: '14.20.0'
 
       - name: Install robotjs
         if: startsWith(matrix.os, 'ubuntu')
