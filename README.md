@@ -39,11 +39,11 @@ git submodule update --remote --init
 # 安装 rust 环境
 
 # 安装项目依赖
-npm i
+pnpm i
 # 将 ts 转成 js
-npm run watch
+pnpm run watch
 # 以开发模式启动项目
-npm start
+pnpm start
 ```
 
 如有网络问题不能 `build`, 可以为 `npm` 设置代理：
@@ -53,9 +53,9 @@ npm start
 # https://www.npmjs.com/package/http-proxy-to-socks
 hpts -s 127.0.0.1:10808 -p 1080
 
-npm config set proxy http://127.0.0.1:1080
-npm run build
-npm config delete proxy
+pnpm config set proxy http://127.0.0.1:1080
+pnpm run build
+pnpm config delete proxy
 ```
 
 ## TODO

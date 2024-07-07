@@ -1,4 +1,5 @@
 import { BrowserWindow, screen, app } from 'electron';
+import { enable } from '@electron/remote/main';
 import internetAvailable from 'internet-available';
 
 import config from '../config';
@@ -24,12 +25,7 @@ export default class Window extends BrowserWindow {
     const x = displayBounds.x + displaySize.width - width;
     const y = displayBounds.y + (isBottom ? displaySize.height - height : 0);
 
-    return {
-      width,
-      height,
-      x,
-      y,
-    };
+    return { width, height, x, y };
   }
 
   constructor() {
@@ -53,6 +49,8 @@ export default class Window extends BrowserWindow {
       ...Window.getRenderPosition(),
     });
 
+    enable(this.webContents);
+
     this.on('blur', () => {
       if (!config.isDebug && !this.webContents.isDevToolsOpened()) this.fadeOut();
     });
@@ -64,9 +62,6 @@ export default class Window extends BrowserWindow {
     this.webContents.addListener('devtools-closed', () => {
       this.setAlwaysOnTop(false);
     });
-
-    // eslint-disable-next-line no-console
-    this.webContents.addListener('crashed', console.log);
 
     internetAvailable({ timeout: 1000, retries: 5, port: '53', host: '114.114.114.114', domainName: 'google.com' })
       .then(() => {

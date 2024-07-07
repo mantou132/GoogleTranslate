@@ -22,7 +22,7 @@ jobs:
           node-version: '14'
 
       - name: Install deps
-        run: npm i --ignore-scripts && npm i -D puppeteer
+        run: pnpm i --ignore-scripts && pnpm i -D puppeteer
 
       - name: Test
-        run: npm run test
+        run: pnpm run test

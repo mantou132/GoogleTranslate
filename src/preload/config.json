@@ -8,7 +8,7 @@
   "signOut": "a[href*=\"https://accounts.google.com/Logout\"]",
   "sourceDetectLabel": "div[data-auto-open-search] > div > div> div div[data-language-code=\"auto\"]",
   "sourceCurrentLabel": "h1 + div > div > c-wiz[jsmodel] > div > c-wiz > div:nth-of-type(1)",
-  "targetCurrentLabel": "h1 + div > div > c-wiz[jsmodel] > div > c-wiz > div:nth-of-type(4)",
+  "targetCurrentLabel": "h1 + div > div > c-wiz[jsmodel] > div > c-wiz > div:nth-of-type(3)",
   "targetENLabel": "h1 + div > div > c-wiz[jsmodel] > div > c-wiz > div:nth-of-type(2) > div[data-auto-open-search] > div > div> div div[data-language-code=\"en\"]",
   "targetZHCNLabel": "h1 + div > div > c-wiz[jsmodel] > div > c-wiz > div:nth-of-type(2) > div[data-auto-open-search] > div > div> div div[data-language-code=\"zh-CN\"]"
 }

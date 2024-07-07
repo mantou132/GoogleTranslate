@@ -3,6 +3,7 @@ import path from 'path';
 import { app, Tray, MenuItem, Menu } from 'electron';
 import AutoLaunch from 'auto-launch';
 import { autoUpdater } from 'electron-updater';
+import { initialize } from '@electron/remote/main';
 
 import config from '../config';
 import { CUSTOM_EVENT, SHORTCUT } from '../consts';
@@ -13,6 +14,7 @@ import GtTray from './tray';
 import shortcutRegister from './shortcut';
 import settings from './settings';
 
+initialize();
 process.env.GOOGLE_API_KEY = 'AIzaSyB0X6iZUJXzdqBK-3TOzKIx6p14J2Eb4OU';
 
 if (!config.isDebug) {

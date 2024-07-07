@@ -7,6 +7,23 @@ export default async () => {
     window.addEventListener('DOMContentLoaded', resolve);
   });
 
+  const padding = [0, 0, 0, 0];
+  const borderRadius = [0];
+
+  if (config.platform === 'win32') {
+    padding[0] = padding[3] = 20;
+  }
+  if (config.platform === 'linux') {
+    padding[2] = padding[3] = 20;
+  }
+  if (config.platform === 'darwin') {
+    padding[3] = 14;
+    if (screen.height > 1200) {
+      padding[0] = padding[1] = padding[2] = padding[3];
+      borderRadius[0] = 14;
+    }
+  }
+
   const style = document.createElement('style');
   style.innerText = css`
     header,
@@ -45,16 +62,17 @@ export default async () => {
     }
     body {
       background: transparent !important;
-      transform: translateX(100%) !important;
-      margin: ${config.platform === 'win32' ? '20px' : '0'} 0 ${config.platform === 'linux' ? '20px' : '0'} 20px !important;
-      filter: drop-shadow(rgba(0, 0, 0, 0.5) 0px 0px 0.5px) !important;
-      box-shadow: 0 1px 10px rgba(0, 0, 0, 0.15) !important;
+      transform: translateX(100%);
+      box-sizing: border-box !important;
+      padding: ${padding.map(e => `${e}px`).join(' ')} !important;
+      filter: drop-shadow(rgba(0, 0, 0, 0.5) 0px 0px 0.5px) drop-shadow(rgba(0, 0, 0, 0.15) 0px 1px 10px) !important;
     }
     /* main */
     body > c-wiz[view] {
-      overflow: auto;
-      height: 100vh !important;
+      overflow: auto !important;
+      height: 100% !important;
       background: #f5f5f5 !important;
+      border-radius: ${borderRadius[0]}px !important;
     }
   `;
   document.head.append(style);

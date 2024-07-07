@@ -11,7 +11,7 @@ beforeAll(async () => {
   });
 
   page = await browser.newPage();
-  await page.emulate(puppeteer.devices['iPhone X']);
+  await page.emulate(puppeteer.KnownDevices['iPhone 13 Mini']);
   await page.goto('https://translate.google.com');
 
   (await page.$(selectors.sourceTextArea))?.type('China');
