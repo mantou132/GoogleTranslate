@@ -4,7 +4,7 @@ import path from 'path';
 import fs from 'fs';
 import { promisify } from 'util';
 
-import { dialog, app } from 'electron';
+import { dialog, app, shell } from 'electron';
 import mkdirp from 'mkdirp';
 import ipc from 'node-ipc';
 import regedit, { RegsValues, RegKeys } from 'regedit';
@@ -21,7 +21,7 @@ const vbsPath = config.isDebug
   : path.resolve(__public, 'vbs');
 regedit.setExternalVBSLocation(vbsPath);
 
-type BrowserName = 'Chrome' | 'Chromium' | 'Chrome Canary' | 'Firefox';
+type BrowserName = 'Chrome' | 'Chromium' | 'Chrome Canary' | 'Firefox' | 'Vivaldi';
 
 function getNativeMessageDir(browser: BrowserName) {
   // https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Native_manifests
@@ -34,8 +34,8 @@ function getNativeMessageDir(browser: BrowserName) {
         case 'Chrome Canary':
         case 'Chrome':
           return `Library/Application Support/Google/${browser}/NativeMessagingHosts`;
-        case 'Chromium':
-          return 'Library/Application Support/Chromium/NativeMessagingHosts';
+        default:
+          return `Library/Application Support/${browser}/NativeMessagingHosts`;
       }
     case 'linux':
       switch (browser) {
@@ -44,8 +44,8 @@ function getNativeMessageDir(browser: BrowserName) {
         case 'Chrome Canary':
         case 'Chrome':
           return `.config/google-${browser.toLowerCase().replace(' ', '-')}/NativeMessagingHosts`;
-        case 'Chromium':
-          return '.config/chromium/NativeMessagingHosts';
+        default:
+          return `.config/${browser.toLowerCase().replace(' ', '-')}/NativeMessagingHosts`;
       }
     case 'win32':
       // 位置在注册表指定
@@ -87,9 +87,7 @@ async function writeRegistryKey(browser: BrowserName, filePath: string) {
     case 'Firefox':
       values['HKCU\\SOFTWARE\\Mozilla\\NativeMessagingHosts\\google_translate_bridge'] = value;
       break;
-    case 'Chrome Canary':
-    case 'Chrome':
-    case 'Chromium':
+    default:
       values['HKCU\\SOFTWARE\\Google\\Chrome\\NativeMessagingHosts\\google_translate_bridge'] = value;
       break;
   }
@@ -108,7 +106,7 @@ export function installNativeMessageManifest() {
     type: 'stdio',
   };
 
-  const browsers: BrowserName[] = ['Chrome', 'Chrome Canary', 'Chromium', 'Firefox'];
+  const browsers: BrowserName[] = ['Chrome', 'Chrome Canary', 'Chromium', 'Firefox', 'Vivaldi'];
 
   browsers.forEach(async browser => {
     const title = `Google 翻译添加 ${browser} 扩展支持失败`;
@@ -150,12 +148,16 @@ export function initIpcService(window: Window) {
   ipc.config.id = config.isDebug ? 'bridge' : 'google-translate-bridge';
   ipc.config.retry = 1000;
   ipc.config.silent = true;
-  ipc.serve(() =>
+  ipc.serve(() => {
     ipc.server.on(CUSTOM_EVENT.TRANSLATE_REQUEST, message => {
       window.fadeIn();
 
       window.webContents.send(CUSTOM_EVENT.TRANSLATE, message);
-    }),
-  );
+    });
+
+    ipc.server.on(CUSTOM_EVENT.OPEN_URL, (message: string) => {
+      shell.openExternal(message);
+    });
+  });
   ipc.server.start();
 }

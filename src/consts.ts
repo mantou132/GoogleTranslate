@@ -4,6 +4,9 @@ export const CUSTOM_EVENT = {
   // 发送给 google translate 进行翻译
   TRANSLATE: 'translate',
 
+  // 用默认浏览器打开链接
+  OPEN_URL: 'open-url',
+
   WINDOW_FADEIN: 'fade-in',
   WINDOW_FADEOUT: 'fade-out',
 
